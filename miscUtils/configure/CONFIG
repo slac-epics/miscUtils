@@ -1,4 +1,5 @@
 #CONFIG
+INSTALL_LOCATION_APP=/afs/slac/g/spear/epics/site
 include $(TOP)/configure/CONFIG_APP
 # Add any changes to make definitions here
 
