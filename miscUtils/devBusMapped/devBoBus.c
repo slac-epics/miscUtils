@@ -70,7 +70,8 @@ long rval = 2; /* don't convert */
 	if (!prec->pini) {
 		DevBusMappedPvt pvt = prec->dpvt;
 		unsigned		v;
-		rval = pvt->acc->rd(pvt, &v, (dbCommon*)prec);
+		if ( devBusMappedGetVal(pvt, &v, (dbCommon*)prec) )
+			recGblSetSevr( prec, READ_ALARM, INVALID_ALARM );
 		if ( prec->mask ) {
 			v &= prec->mask;
 		}
@@ -89,14 +90,14 @@ unsigned 		v;
 
 epicsMutexLock(pvt->dev->mutex);
 	if ( pbo->mask ) {
-		if ( (rval = pvt->acc->rd(pvt, &v, (dbCommon*)pbo) ) < 0 )
+		if ( (rval = devBusMappedGetVal(pvt, &v, (dbCommon*)pbo) ) < 0 )
 			goto leave;
 		v &= ~pbo->mask;
 		v |= pbo->rval & pbo->mask;
 	} else {
 		v = pbo->rval;
 	}
-	rval =  pvt->acc->wr(pvt, v, (dbCommon*)pbo);
+	rval =  devBusMappedPutVal(pvt, v, (dbCommon*)pbo);
 
 leave:
 epicsMutexUnlock(pvt->dev->mutex);

@@ -6,6 +6,7 @@
 
 #include <epicsMutex.h>
 #include <registry.h>
+#include <alarm.h>
 
 #define DEV_BUS_MAPPED_PVT
 #include <devBusMapped.h>
@@ -218,6 +219,28 @@ char          *endp;
 
 	return !rval;
 }
+
+/* invoke the access method and do common work
+ * (raise alarms)
+ */
+int
+devBusMappedGetVal(DevBusMappedPvt pvt, unsigned *pvalue, dbCommon *prec)
+{
+int rval = pvt->acc->rd(pvt, pvalue, prec);
+	if ( rval )
+		recGblSetSevr( prec, READ_ALARM, INVALID_ALARM );
+	return rval;
+}
+
+int
+devBusMappedPutVal(DevBusMappedPvt pvt, unsigned value, dbCommon *prec)
+{
+int rval = pvt->acc->wr(pvt, value, prec);
+	if ( rval )
+		recGblSetSevr( prec, WRITE_ALARM, INVALID_ALARM );
+	return rval;
+}
+
 
 /* Register a device's base address and return a pointer to a
  * freshly allocated 'DevBusMappedDev' struct or NULL on failure.

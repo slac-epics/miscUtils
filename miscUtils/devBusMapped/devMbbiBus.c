@@ -77,7 +77,7 @@ DevBusMappedPvt pvt = pmbbi->dpvt;
 long			rval;
 unsigned		v;
 
-    rval = pvt->acc->rd(pvt, &v, (dbCommon*)pmbbi);
+    rval = devBusMappedGetVal(pvt, &v, (dbCommon*)pmbbi);
 	if ( rval >=0 ) {
     	pmbbi->rval = v & pmbbi->mask;
 	}

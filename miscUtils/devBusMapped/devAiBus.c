@@ -88,5 +88,5 @@ static long init_record(aiRecord *prec)
 static long read_ai(aiRecord *pai)
 {
 DevBusMappedPvt pvt = pai->dpvt;
-	return pvt->acc->rd(pvt, &pai->rval, (dbCommon*)pai);
+	return devBusMappedGetVal(pvt, &pai->rval, (dbCommon*)pai);
 }

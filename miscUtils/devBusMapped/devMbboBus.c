@@ -87,7 +87,8 @@ unsigned		v;
 
     pmbbo->mask <<= pmbbo->shft;
 
-	pvt->acc->rd(pvt,&v,(dbCommon*)pmbbo);
+	if ( devBusMappedGetVal(pvt,&v,(dbCommon*)pmbbo) )
+		recGblSetSevr( pmbbo, READ_ALARM, INVALID_ALARM );
 	pmbbo->rval  = pmbbo->rbv = v;
 	pmbbo->rval &= pmbbo->mask;
 
@@ -115,7 +116,7 @@ long			rval;
 	 */
 epicsMutexLock(pvt->dev->mutex);
 
-	if ( (rval = pvt->acc->rd(pvt, &data, (dbCommon *)pmbbo)) < 0 ) {
+	if ( (rval = devBusMappedGetVal(pvt, &data, (dbCommon *)pmbbo)) < 0 ) {
 		goto leave;
 	}
 
@@ -125,7 +126,7 @@ epicsMutexLock(pvt->dev->mutex);
 
     data |= (pmbbo->rval & pmbbo->mask);
 
-	rval = pvt->acc->wr(pvt, data, (dbCommon *)pmbbo);
+	rval = devBusMappedPutVal(pvt, data, (dbCommon *)pmbbo);
 
 leave:
 epicsMutexUnlock(pvt->dev->mutex);

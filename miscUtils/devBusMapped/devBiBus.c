@@ -90,7 +90,7 @@ static long read_bi(biRecord *pbi)
 unsigned		v;
 long			rval;
 DevBusMappedPvt pvt = pbi->dpvt;
-	rval = pvt->acc->rd(pvt, &v, (dbCommon*)pbi);
+	rval = devBusMappedGetVal(pvt, &v, (dbCommon*)pbi);
 	if ( rval >= 0 ) {
 		if ( pbi->mask )
 		 	v &= pbi->mask;

@@ -85,7 +85,8 @@ long rval = 0;
 
 	if (!prec->pini) {
 		DevBusMappedPvt pvt = prec->dpvt;
-		rval = pvt->acc->rd(pvt, &prec->rval, (dbCommon*)prec);
+		if ( devBusMappedGetVal(pvt, &prec->rval, (dbCommon*)prec) );
+		recGblSetSevr( prec, READ_ALARM, INVALID_ALARM );
 		recGblResetAlarms(prec);
 	}
 	/* convert */
@@ -97,7 +98,7 @@ static long write_ao(aoRecord	*pao)
 DevBusMappedPvt pvt = pao->dpvt;
 long			rval;
 epicsMutexLock(pvt->dev->mutex);
-	rval = pvt->acc->wr(pvt,pao->rval, (dbCommon*)pao);
+	rval = devBusMappedPutVal(pvt,pao->rval, (dbCommon*)pao);
 epicsMutexUnlock(pvt->dev->mutex);
 	return rval;
 }

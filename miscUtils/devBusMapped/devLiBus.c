@@ -85,5 +85,5 @@ static long init_record(longinRecord *prec)
 static long read_longin(longinRecord *plongin)
 {
 DevBusMappedPvt pvt = plongin->dpvt;
-	return pvt->acc->rd(pvt, &plongin->val, (dbCommon*)plongin);
+	return devBusMappedGetVal(pvt, &plongin->val, (dbCommon*)plongin);
 }

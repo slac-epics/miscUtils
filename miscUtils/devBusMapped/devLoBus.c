@@ -81,7 +81,8 @@ long rval = 0;
 
 	if (!prec->pini) {
 		DevBusMappedPvt pvt = prec->dpvt;
-		rval = pvt->acc->rd(pvt, &prec->val, (dbCommon*)prec);
+		if ( devBusMappedGetVal(pvt, &prec->val, (dbCommon*)prec) )
+			recGblSetSevr( prec, READ_ALARM, INVALID_ALARM );
 		recGblResetAlarms(prec);
 	}
     return(rval);
@@ -92,7 +93,7 @@ static long write_longout(longoutRecord	*plongout)
 DevBusMappedPvt pvt = plongout->dpvt;
 long			rval;
 epicsMutexLock(pvt->dev->mutex);
-	rval = pvt->acc->wr(pvt, plongout->val, (dbCommon*)plongout);
+	rval = devBusMappedPutVal(pvt, plongout->val, (dbCommon*)plongout);
 epicsMutexUnlock(pvt->dev->mutex);
 	return rval;
 }

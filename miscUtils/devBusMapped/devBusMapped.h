@@ -1,6 +1,6 @@
 #ifndef DEV_BUS_MAPPED_SUPPORT_H
 #define DEV_BUS_MAPPED_SUPPORT_H
-/* $Id: devBusMapped.h,v 1.4 2003/08/15 20:00:53 till Exp $ */
+/* $Id: devBusMapped.h,v 1.5 2003/10/14 18:53:29 till Exp $ */
 
 /* Unified device support for simple, bus-mapped device registers */
 
@@ -55,6 +55,15 @@ typedef struct DevBusMappedAccessRec_ {
 	DevBusMappedWrite	wr;		/* read access routine				 */
 } DevBusMappedAccessRec;
 
+/* invoke the access methods and raise alarms if the access
+ * fails.
+ */
+int
+devBusMappedGetVal(DevBusMappedPvt pvt, unsigned *pvalue, dbCommon *prec);
+
+int
+devBusMappedPutVal(DevBusMappedPvt pvt, unsigned value, dbCommon *prec);
+
 /* "per-device" information kept in the registry */
 typedef struct DevBusMappedDevRec_ {
 	volatile void *baseAddr;
@@ -74,6 +83,8 @@ typedef struct DevBusMappedDevRec_ {
  * NULL 'pvt' argument. However, special device support could
  * make the 'DevBusMappedPvtRec' part of a bigger struct and pass
  * a pointer to the 'DevBusMappedPvtRec' subpart to 'devBusVmeLinkInit()'.)
+ *
+ * Nobody should access fields in this structure directly.
  */
 typedef struct DevBusMappedPvtRec_ {
 	dbCommon			*prec;	/* record this devsup is attached to */
