@@ -1,12 +1,13 @@
 #ifndef LITTLE_ENDIAN_TO_CPU_CONVERSION_H
 #define LITTLE_ENDIAN_TO_CPU_CONVERSION_H
 
-/* $Id: endian2cpu.h,v 1.2 2002/08/16 19:49:51 till Exp $ */
+/* $Id: endian2cpu.h,v 1.3 2002/11/19 02:28:08 till Exp $ */
 
 #ifdef __rtems__
 #include <libcpu/io.h> /* rtems has these already */
 #else
 
+#include <sys/types.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>	/* for to/fro bigendian conversion */
 
@@ -51,9 +52,22 @@
  */
 
 typedef union {
-	int	i;
+	int		i;
 	char	c[sizeof(int)];
-} EndianTestU;
+} __EndianTestU;
+
+typedef uint32_t __Endian2Cpu32_t;
+typedef uint16_t __Endian2Cpu16_t;
+
+typedef union {
+	__Endian2Cpu32_t	ui32;
+	unsigned char		c[4];
+} __Endian2Cpu32U; 
+
+typedef union {
+	__Endian2Cpu16_t	ui16;
+	unsigned char		c[2];
+} __Endian2Cpu16U; 
 
 #ifdef __GNUC__
 
@@ -62,7 +76,17 @@ typedef union {
 /* GCC doesn't optimize a static const variable away :-(
  * we may cast unions, however and this works fine
  */
-#define ENDIAN_TEST_IS_LITTLE	(((EndianTestU){1}).c[0])
+#if 0
+#define ENDIAN_TEST_IS_LITTLE	(((__EndianTestU){1}).c[0])
+#else
+static __inline__ int
+__endian_test_is_little(void)
+{
+const __EndianTestU u = {(int)1};
+	return u.c[0];
+}
+#define ENDIAN_TEST_IS_LITTLE	__endian_test_is_little()
+#endif
 
 #else /* not gcc */
 
@@ -73,7 +97,7 @@ typedef union {
 					 *       for testing...
 					 */
 
-static const EndianTestU endianTester={i:1,};
+static const __EndianTestU endianTester={i:1,};
 #define ENDIAN_TEST_IS_LITTLE	(endianTester.c[0])
 
 #endif /* if __GNUC__ */
@@ -90,39 +114,33 @@ static const EndianTestU endianTester={i:1,};
 
 #ifdef ASSEMBLEPPC
 #define __iobarrier	do { __asm__ __volatile__ ("eieio"); } while(0)
+#elif defined(__i386__) | defined(__i386)
+/* nothing to do on __i386__ */
 #else
 #warning "Unknown IO barrier/synchronization for this CPU (add an #ifdef <YourCpu> around this warning if none needed by your CPU)"
+#endif
+
+#ifndef __iobarrier
 #define __iobarrier do{}while(0)
 #endif
 
-static _INLINE_ unsigned long
-in_le32(volatile void *pval)
+static _INLINE_ __Endian2Cpu32_t
+in_le32(volatile __Endian2Cpu32_t *pval)
 {
-register unsigned long rval;
+register __Endian2Cpu32_t rval;
 	if (ENDIAN_TEST_IS_LITTLE) {
-		if (sizeof(unsigned long)==4) {
-			rval = *(unsigned long*)pval;
-		} else if (sizeof(unsigned int)==4) {
-			rval = *(unsigned int*)pval;
-		} else {
-			/* brute force; should be optimized away */
-			int i;
-			for (i=3,rval=0; i>=0; i--) {
-				rval<<=8;
-				rval|=((unsigned char*)pval)[i];
-			}
-		}
+			rval = *pval;
 	} else {
 #ifdef ASSEMBLEPPC
 		{
-		register unsigned long rval;
 		__asm__ __volatile__("lwbrx %0, 0, %1":"=r"(rval):"r"(pval));
 		}
 #else
 		{
-		unsigned char *cp=(unsigned char*)pval;
+		__Endian2Cpu32U src;
+	   	src.ui32	= *pval;
 		/* brute force */
-		rval = (cp[0]<<24) | (cp[1]<<16) | (cp[2]<<8) | cp[3];
+		rval = (src.c[0]<<24) | (src.c[1]<<16) | (src.c[2]<<8) | src.c[3];
 		}
 #endif
 	}
@@ -130,44 +148,44 @@ register unsigned long rval;
 	return rval;
 }
 
-static _INLINE_ unsigned long
-in_be32(volatile void *pval)
+static _INLINE_ __Endian2Cpu32_t
+in_be32(volatile __Endian2Cpu32_t *pval)
 {
-register unsigned long rval=ntohl(*(volatile unsigned long*)pval);
+register __Endian2Cpu32_t rval=*pval;
 	__iobarrier;
-	return rval;
+	return ntohl(rval);
 }
 
-static _INLINE_ unsigned short
-in_le16(volatile unsigned short *pval)
+static _INLINE_ __Endian2Cpu16_t
+in_le16(volatile __Endian2Cpu16_t *pval)
 {
-register unsigned short rval;
-		if (ENDIAN_TEST_IS_LITTLE) {
-				rval = *pval;
-		} else {
+register __Endian2Cpu16_t rval;
+	if (ENDIAN_TEST_IS_LITTLE) {
+		rval = *pval;
+	} else {
 #ifdef ASSEMBLEPPC
 		{
-		register unsigned short rval;
 		__asm__ __volatile__("lhbrx %0, 0, %1":"=r"(rval):"r"(pval));
 		}
 #else
 		{
-		unsigned char *cp=(unsigned char*)pval;
+		__Endian2Cpu16U src;
+	   	src.ui16	= *pval;
 		/* brute force */
-		rval = (cp[0]<<8) | cp[1];
+		rval = (src.c[0]<<8) | src.c[1];
 		}
 #endif
-		}
-		__iobarrier;
-		return rval;
-}
-
-static _INLINE_ unsigned short
-in_be16(volatile void *pval)
-{
-register unsigned short rval=ntohs(*(volatile unsigned short*)pval);
+	}
 	__iobarrier;
 	return rval;
+}
+
+static _INLINE_ __Endian2Cpu16_t
+in_be16(volatile __Endian2Cpu16_t *pval)
+{
+register __Endian2Cpu16_t rval=*pval;
+	__iobarrier;
+	return ntohs(rval);
 }
 
 
@@ -181,96 +199,69 @@ register unsigned char rval=*pval;
 }
 
 static _INLINE_ void
-out_le32(volatile void *addr, unsigned long val)
+out_le32(volatile __Endian2Cpu32_t *addr, __Endian2Cpu32_t val)
 {
-		if (ENDIAN_TEST_IS_LITTLE) {
-			if (sizeof(unsigned long)==4) {
-					*(unsigned long*)addr=val;
-			} else if (sizeof(unsigned int)==4) {
-					*(unsigned int*)addr=(unsigned int)val;
-			} else {
-					/* brute force; hopefully optimized away */
-				int i;
-				for (i=0; i<4; i++,val>>=8) {
-					((unsigned char*)addr)[i] = (unsigned char)(val & 0xff);
-				}
-			}
-		} else {
+	if (ENDIAN_TEST_IS_LITTLE) {
+		*addr=val;
+	} else {
 #ifdef ASSEMBLEPPC
 		{
-		register unsigned short rval;
-		__asm__ __volatile__("stwbrx %1, 0, %2":"=m"(*(unsigned long *)addr):"r"(val),"r"(addr));
+		__asm__ __volatile__("stwbrx %1, 0, %2":"=m"(*addr):"r"(val),"r"(addr));
 		}
 #else
 		{
-			/* brute force; unused branches are optimized away */
-			if (sizeof(unsigned long)==4) {
-					unsigned long l;
-					l = (((val & 0xff000000) >> 24) | 
-					     ((val & 0x00ff0000) >>  8) | 
-					     ((val & 0x0000ff00) <<  8) |
-					     ((val & 0x000000ff) << 24));
-					*(volatile unsigned long*)addr=l;
-			} else if (sizeof(unsigned int)==4) {
-					unsigned int  i;
-					i = (((val & 0xff000000) >> 24) | 
-					     ((val & 0x00ff0000) >>  8) | 
-					     ((val & 0x0000ff00) <<  8) |
-					     ((val & 0x000000ff) << 24));
-					*(volatile unsigned int*)addr=i;
-			} else {
-				volatile unsigned char *cp=addr;
-				*cp++=(unsigned char)(val&0xff); val >>= 8;
-				*cp++=(unsigned char)(val&0xff); val >>= 8;
-				*cp++=(unsigned char)(val&0xff); val >>= 8;
-				*cp++=(unsigned char)(val&0xff); val >>= 8;
-			}
+		/* brute force */
+		__Endian2Cpu32_t l;
+		l = (((val & 0xff000000) >> 24) | 
+		     ((val & 0x00ff0000) >>  8) | 
+		     ((val & 0x0000ff00) <<  8) |
+		     ((val & 0x000000ff) << 24));
+		*addr=l;
 		}
 #endif
-		}
-		__iobarrier;
-}
-
-static _INLINE_ void
-out_be32(volatile void *addr, unsigned long val)
-{
-	*(volatile unsigned long*)addr = htonl(val);
+	}
 	__iobarrier;
 }
 
 static _INLINE_ void
-out_le16(volatile void *addr, unsigned short val)
+out_be32(volatile __Endian2Cpu32_t *addr, __Endian2Cpu32_t val)
 {
-		if (ENDIAN_TEST_IS_LITTLE) {
-				*(volatile unsigned short*)addr=val;
-		} else {
+	*addr = htonl(val);
+	__iobarrier;
+}
+
+static _INLINE_ void
+out_le16(volatile __Endian2Cpu16_t *addr, __Endian2Cpu16_t val)
+{
+	if (ENDIAN_TEST_IS_LITTLE) {
+		*addr=val;
+	} else {
 #ifdef ASSEMBLEPPC
 		{
-		register unsigned short rval;
-		__asm__ __volatile__("sthbrx %1, 0, %2":"=m"(*(unsigned short*)addr):"r"(val),"r"(addr));
+		__asm__ __volatile__("sthbrx %1, 0, %2":"=m"(*addr):"r"(val),"r"(addr));
 		}
 #else
 		{
 		/* brute force */
 			val = ((val & 0xff)<<8) | ((val>>8)&0xff);
-			*(volatile unsigned short*)addr=val;
+			*addr=val;
 		}
 #endif
-		}
-		__iobarrier;
-}
-
-static _INLINE_ void
-out_be16(volatile void *addr, unsigned short val)
-{
-	*(volatile unsigned short*)addr = htons(val);
+	}
 	__iobarrier;
 }
 
 static _INLINE_ void
-out_8(volatile void *addr, unsigned char val)
+out_be16(volatile __Endian2Cpu16_t *addr, __Endian2Cpu16_t val)
 {
-		*(volatile unsigned char*)addr=val;
+	*addr = htons(val);
+	__iobarrier;
+}
+
+static _INLINE_ void
+out_8(volatile unsigned char *addr, unsigned char val)
+{
+		*addr=val;
 		__iobarrier;
 }
 
