@@ -1,6 +1,6 @@
 #ifndef DEV_BUS_MAPPED_SUPPORT_H
 #define DEV_BUS_MAPPED_SUPPORT_H
-/* $Id: devBusMapped.h,v 1.5 2003/10/14 18:53:29 till Exp $ */
+/* $Id: devBusMapped.h,v 1.6 2004/05/03 19:02:52 till Exp $ */
 
 /* Unified device support for simple, bus-mapped device registers */
 
@@ -23,15 +23,18 @@
  *  Finally, the <offset> is added to calculate the real register
  *  address.
  *
- *  <method> may be any of 'be8[s]','be16[s]','be32','le16[s]','le32' to 
- *  indicate the access that should be used (big/little endian, data
- *  width; the optional 's' [e.g. le16s] indicates that the short
- *  little endian data are signed). If no <method> is specified,
- *  "be32" is assumed.
+ *  <method> may be any of 'be8[s]','be16[s]','be32','le16[s]','le32',
+ *  'm8', 'm16[s]', or 'm32[s]' to specify the access method that
+ *  should be used (big/little/cpu endian, data width; the optional
+ *  's' [e.g. le16s] indicates that the short little endian data are
+ *  signed). If no <method> is specified, *  "be32" is assumed.
+ *  The 'm' methods are appropriate to access variables in memory
+ *  (cpu endianness).
  *
  *  In addition, user supported access methods are supported. A driver
- *  can simply register its DevBusMappedAccessRec with a call to
- *  'devBusMappedRegisterIO()'.
+ *  can register its own DevBusMappedAccessRec with a call to
+ *  'devBusMappedRegisterIO()' which is then free to do any kind
+ *  of fancy things at a low level.
  */
 
 #include <dbCommon.h>
