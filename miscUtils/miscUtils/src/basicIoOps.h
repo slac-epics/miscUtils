@@ -1,9 +1,10 @@
-#ifndef LITTLE_ENDIAN_TO_CPU_CONVERSION_H
-#define LITTLE_ENDIAN_TO_CPU_CONVERSION_H
+#ifndef TILLS_INPUT_OUTPUT_OPERA_H
+#define TILLS_INPUT_OUTPUT_OPERA_H
 
-/* $Id: endian2cpu.h,v 1.3 2002/11/19 02:28:08 till Exp $ */
+/* $Id: endian2cpu.h,v 1.4 2003/02/24 22:28:57 till Exp $ */
 
 #ifdef __rtems__
+#include <rtems.h>
 #include <libcpu/io.h> /* rtems has these already */
 #else
 
@@ -56,18 +57,18 @@ typedef union {
 	char	c[sizeof(int)];
 } __EndianTestU;
 
-typedef uint32_t __Endian2Cpu32_t;
-typedef uint16_t __Endian2Cpu16_t;
+typedef uint32_t __TillsIoOps32_t;
+typedef uint16_t __TillsIoOps16_t;
 
 typedef union {
-	__Endian2Cpu32_t	ui32;
+	__TillsIoOps32_t	ui32;
 	unsigned char		c[4];
-} __Endian2Cpu32U; 
+} __TillsIoOps32U; 
 
 typedef union {
-	__Endian2Cpu16_t	ui16;
+	__TillsIoOps16_t	ui16;
 	unsigned char		c[2];
-} __Endian2Cpu16U; 
+} __TillsIoOps16U; 
 
 #ifdef __GNUC__
 
@@ -97,7 +98,7 @@ const __EndianTestU u = {(int)1};
 					 *       for testing...
 					 */
 
-static const __EndianTestU endianTester={i:1,};
+static const __EndianTestU endianTester={(int)1};
 #define ENDIAN_TEST_IS_LITTLE	(endianTester.c[0])
 
 #endif /* if __GNUC__ */
@@ -114,7 +115,7 @@ static const __EndianTestU endianTester={i:1,};
 
 #ifdef ASSEMBLEPPC
 #define __iobarrier	do { __asm__ __volatile__ ("eieio"); } while(0)
-#elif defined(__i386__) | defined(__i386)
+#elif defined(__i386__) || defined(__i386) || defined(__sparc__) || defined(__sparc)
 /* nothing to do on __i386__ */
 #else
 #warning "Unknown IO barrier/synchronization for this CPU (add an #ifdef <YourCpu> around this warning if none needed by your CPU)"
@@ -124,10 +125,10 @@ static const __EndianTestU endianTester={i:1,};
 #define __iobarrier do{}while(0)
 #endif
 
-static _INLINE_ __Endian2Cpu32_t
-in_le32(volatile __Endian2Cpu32_t *pval)
+static _INLINE_ __TillsIoOps32_t
+in_le32(volatile __TillsIoOps32_t *pval)
 {
-register __Endian2Cpu32_t rval;
+register __TillsIoOps32_t rval;
 	if (ENDIAN_TEST_IS_LITTLE) {
 			rval = *pval;
 	} else {
@@ -137,10 +138,10 @@ register __Endian2Cpu32_t rval;
 		}
 #else
 		{
-		__Endian2Cpu32U src;
+		__TillsIoOps32U src;
 	   	src.ui32	= *pval;
 		/* brute force */
-		rval = (src.c[0]<<24) | (src.c[1]<<16) | (src.c[2]<<8) | src.c[3];
+		rval = (src.c[3]<<24) | (src.c[2]<<16) | (src.c[1]<<8) | src.c[0];
 		}
 #endif
 	}
@@ -148,18 +149,18 @@ register __Endian2Cpu32_t rval;
 	return rval;
 }
 
-static _INLINE_ __Endian2Cpu32_t
-in_be32(volatile __Endian2Cpu32_t *pval)
+static _INLINE_ __TillsIoOps32_t
+in_be32(volatile __TillsIoOps32_t *pval)
 {
-register __Endian2Cpu32_t rval=*pval;
+register __TillsIoOps32_t rval=*pval;
 	__iobarrier;
 	return ntohl(rval);
 }
 
-static _INLINE_ __Endian2Cpu16_t
-in_le16(volatile __Endian2Cpu16_t *pval)
+static _INLINE_ __TillsIoOps16_t
+in_le16(volatile __TillsIoOps16_t *pval)
 {
-register __Endian2Cpu16_t rval;
+register __TillsIoOps16_t rval;
 	if (ENDIAN_TEST_IS_LITTLE) {
 		rval = *pval;
 	} else {
@@ -169,10 +170,10 @@ register __Endian2Cpu16_t rval;
 		}
 #else
 		{
-		__Endian2Cpu16U src;
+		__TillsIoOps16U src;
 	   	src.ui16	= *pval;
 		/* brute force */
-		rval = (src.c[0]<<8) | src.c[1];
+		rval = (src.c[1]<<8) | src.c[0];
 		}
 #endif
 	}
@@ -180,10 +181,10 @@ register __Endian2Cpu16_t rval;
 	return rval;
 }
 
-static _INLINE_ __Endian2Cpu16_t
-in_be16(volatile __Endian2Cpu16_t *pval)
+static _INLINE_ __TillsIoOps16_t
+in_be16(volatile __TillsIoOps16_t *pval)
 {
-register __Endian2Cpu16_t rval=*pval;
+register __TillsIoOps16_t rval=*pval;
 	__iobarrier;
 	return ntohs(rval);
 }
@@ -199,7 +200,7 @@ register unsigned char rval=*pval;
 }
 
 static _INLINE_ void
-out_le32(volatile __Endian2Cpu32_t *addr, __Endian2Cpu32_t val)
+out_le32(volatile __TillsIoOps32_t *addr, __TillsIoOps32_t val)
 {
 	if (ENDIAN_TEST_IS_LITTLE) {
 		*addr=val;
@@ -211,7 +212,7 @@ out_le32(volatile __Endian2Cpu32_t *addr, __Endian2Cpu32_t val)
 #else
 		{
 		/* brute force */
-		__Endian2Cpu32_t l;
+		__TillsIoOps32_t l;
 		l = (((val & 0xff000000) >> 24) | 
 		     ((val & 0x00ff0000) >>  8) | 
 		     ((val & 0x0000ff00) <<  8) |
@@ -224,14 +225,14 @@ out_le32(volatile __Endian2Cpu32_t *addr, __Endian2Cpu32_t val)
 }
 
 static _INLINE_ void
-out_be32(volatile __Endian2Cpu32_t *addr, __Endian2Cpu32_t val)
+out_be32(volatile __TillsIoOps32_t *addr, __TillsIoOps32_t val)
 {
 	*addr = htonl(val);
 	__iobarrier;
 }
 
 static _INLINE_ void
-out_le16(volatile __Endian2Cpu16_t *addr, __Endian2Cpu16_t val)
+out_le16(volatile __TillsIoOps16_t *addr, __TillsIoOps16_t val)
 {
 	if (ENDIAN_TEST_IS_LITTLE) {
 		*addr=val;
@@ -252,7 +253,7 @@ out_le16(volatile __Endian2Cpu16_t *addr, __Endian2Cpu16_t val)
 }
 
 static _INLINE_ void
-out_be16(volatile __Endian2Cpu16_t *addr, __Endian2Cpu16_t val)
+out_be16(volatile __TillsIoOps16_t *addr, __TillsIoOps16_t val)
 {
 	*addr = htons(val);
 	__iobarrier;
@@ -261,8 +262,8 @@ out_be16(volatile __Endian2Cpu16_t *addr, __Endian2Cpu16_t val)
 static _INLINE_ void
 out_8(volatile unsigned char *addr, unsigned char val)
 {
-		*addr=val;
-		__iobarrier;
+	*addr=val;
+	__iobarrier;
 }
 
 #endif /* defined(__rtems__) */
