@@ -5,20 +5,16 @@
 #include <stdlib.h>
 
 #include <epicsMutex.h>
-#include <epicsThread.h>
-
+#include <registry.h>
 
 #define DEV_BUS_MAPPED_PVT
 #include <devBusMapped.h>
 #include <basicIoOps.h>
 
 /* just any unique address */
-void			*devBusMappedRegistryId = (void*)&devBusMappedRegistryId;
-epicsMutexId	devBusMappedMutex = 0;
+static void	*registryId = (void*)&registryId;
+static void	*ioRegistryId = (void*)&ioRegistryId;
 
-static epicsThreadOnceId once = EPICS_THREAD_ONCE_INIT;
-
-static void myMutexCreate(void *unused) { devBusMappedMutex = epicsMutexMustCreate(); }
 
 #define DECL_INP(name) static int name(DevBusMappedPvt pvt, unsigned *pv, dbCommon *prec)
 #define DECL_OUT(name) static int name(DevBusMappedPvt pvt, unsigned v, dbCommon *prec)
@@ -93,8 +89,6 @@ unsigned long offset = 0;
 unsigned long rval   = 0;
 char          *base  = 0;
 
-	epicsThreadOnce( &once, myMutexCreate, 0 );
-
 	if ( !pvt ) {
 		assert( pvt = malloc( sizeof(*pvt) ) );
 		prec->dpvt = pvt;
@@ -130,13 +124,36 @@ char          *base  = 0;
 					break;
 				}
 			}
-			if ( 1 == sscanf(base,"%li",&rval) || (rval = (unsigned long)registryFind(devBusMappedRegistryId, base)) ) {
+
+			if ( 1 == sscanf(base,"%li",&rval) ) {
+				int  i;
+				char buf[15];
+				/* they specified a number; create a registry entry on the fly... */
+
+				/* make a canonical name */
+				sprintf(buf,"0x%08lX",rval);
+
+				/* try to find; if that fails, try to create; if this fails, try
+				 * to find again - someone else might have created in the meantime...
+				 */
+				for ( i = 0;  ! (pvt->dev = (DevBusMappedDev)registryFind(registryId, buf)) && i < 1; i++ ) {
+					if ( (pvt->dev = devBusMappedRegister(buf, (volatile void *)rval)) )
+						break;
+				}
+			} else {
+				pvt->dev = (DevBusMappedDev)registryFind(registryId, base);
+			}
+
+			if ( pvt->dev ) {
+				rval  = (unsigned)pvt->dev->baseAddr;
 				rval += l->value.vmeio.card << l->value.vmeio.signal;
+			} else {
+				rval = 0;
 			}
 
 			if ( comma ) {
 				void *found;
-				if ( (found = registryFind(devBusMappedRegistryId, comma)) ) {
+				if ( (found = registryFind( ioRegistryId, comma )) ) {
 					pvt->acc = found;
 				} else
 				if ( !strncmp(comma,"m32",3) ) {
@@ -182,6 +199,60 @@ char          *base  = 0;
 	pvt->addr = (volatile void*)rval;
 
 	return !rval;
+}
+
+/* Register a device's base address and return a pointer to a
+ * freshly allocated 'DevBusMappedDev' struct or NULL on failure.
+ */
+DevBusMappedDev
+devBusMappedRegister(char *name, volatile void * baseAddress)
+{
+DevBusMappedDev	rval = 0, d;
+
+	if ( (d = malloc(sizeof(*rval) + strlen(name))) ) {
+		/* pre-load the allocated structure -  'registryAdd()'
+		 * is atomical...
+		 */
+		d->baseAddr = baseAddress;
+		strcpy((char*)d->name, name);
+		if ( (d->mutex = epicsMutexCreate()) ) {
+			/* NOTE: the registry keeps a pointer to the name and
+			 *       does not copy the string, therefore we keep one.
+			 *       (_must_ pass d->name, not 'name'!!)
+			 */
+			if ( registryAdd( registryId, d->name, d ) ) {
+				rval = d; d = 0;
+			}
+		}
+	}
+
+	if (d) {
+		if (d->mutex)
+			epicsMutexDestroy(d->mutex);
+		free(d);
+	}
+	return rval;
+}
+
+int
+devBusMappedRegisterIO(char *name, DevBusMappedAccess acc)
+{
+char *n;
+
+	/* EPICS registry doesn't copy the name string, so we do */
+	if ( 0 == (n=malloc(strlen(name)+1)) )
+		return 0;
+
+	strcpy(n,name);
+
+	return ! registryAdd( ioRegistryId, n, (void*) acc );
+}
+
+/* Find the 'devBusMappedDev' of a registered device by name */
+DevBusMappedDev
+devBusMappedFind(char *name)
+{
+	return registryFind(registryId, name);
 }
 
 

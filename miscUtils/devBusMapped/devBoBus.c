@@ -87,7 +87,7 @@ long			rval;
 DevBusMappedPvt pvt = pbo->dpvt;
 unsigned 		v;
 
-epicsMutexLock(devBusMappedMutex);
+epicsMutexLock(pvt->dev->mutex);
 	if ( pbo->mask ) {
 		if ( (rval = pvt->acc->rd(pvt, &v, (dbCommon*)pbo) ) < 0 )
 			goto leave;
@@ -99,6 +99,6 @@ epicsMutexLock(devBusMappedMutex);
 	rval =  pvt->acc->wr(pvt, v, (dbCommon*)pbo);
 
 leave:
-epicsMutexUnlock(devBusMappedMutex);
+epicsMutexUnlock(pvt->dev->mutex);
 	return rval;
 }

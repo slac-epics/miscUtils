@@ -113,7 +113,7 @@ long			rval;
 	/* we could maintain a 'per word' mutex but that would be
 	 * too complicated...
 	 */
-epicsMutexLock(devBusMappedMutex);
+epicsMutexLock(pvt->dev->mutex);
 
 	if ( (rval = pvt->acc->rd(pvt, &data, (dbCommon *)pmbbo)) < 0 ) {
 		goto leave;
@@ -128,7 +128,7 @@ epicsMutexLock(devBusMappedMutex);
 	rval = pvt->acc->wr(pvt, data, (dbCommon *)pmbbo);
 
 leave:
-epicsMutexUnlock(devBusMappedMutex);
+epicsMutexUnlock(pvt->dev->mutex);
 
 	return rval;
 }

@@ -91,9 +91,9 @@ static long write_longout(longoutRecord	*plongout)
 {
 DevBusMappedPvt pvt = plongout->dpvt;
 long			rval;
-epicsMutexLock(devBusMappedMutex);
+epicsMutexLock(pvt->dev->mutex);
 	rval = pvt->acc->wr(pvt, plongout->val, (dbCommon*)plongout);
-epicsMutexUnlock(devBusMappedMutex);
+epicsMutexUnlock(pvt->dev->mutex);
 	return rval;
 }
 

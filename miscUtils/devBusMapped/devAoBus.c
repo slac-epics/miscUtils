@@ -96,9 +96,9 @@ static long write_ao(aoRecord	*pao)
 {
 DevBusMappedPvt pvt = pao->dpvt;
 long			rval;
-epicsMutexLock(devBusMappedMutex);
+epicsMutexLock(pvt->dev->mutex);
 	rval = pvt->acc->wr(pvt,pao->rval, (dbCommon*)pao);
-epicsMutexUnlock(devBusMappedMutex);
+epicsMutexUnlock(pvt->dev->mutex);
 	return rval;
 }
 
