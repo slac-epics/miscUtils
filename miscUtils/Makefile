@@ -9,5 +9,6 @@ DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Lib))
 DIRS += seq ipac gtr gpib ether_ip
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Gpib))
+DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Ipac))
 
 include $(TOP)/configure/RULES_TOP
