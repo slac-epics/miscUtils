@@ -1,5 +1,4 @@
 #CONFIG
-INSTALL_LOCATION_APP=$(TOP)/../..
 include $(TOP)/configure/CONFIG_APP
 # Add any changes to make definitions here
 
