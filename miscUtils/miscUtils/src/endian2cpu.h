@@ -1,11 +1,14 @@
 #ifndef LITTLE_ENDIAN_TO_CPU_CONVERSION_H
 #define LITTLE_ENDIAN_TO_CPU_CONVERSION_H
 
-/* $Id$ */
+/* $Id: le2cpu.h,v 1.1 2002/04/04 00:23:01 strauman Exp $ */
 
 #ifdef __rtems
 #include <libcpu/io.h> /* rtems has these already */
 #else
+
+#include <arpa/inet.h>
+#include <netinet/in.h>	/* for to/fro bigendian conversion */
 
 /* Routines to convert little endian data
  * to CPU representation and vice versa.
@@ -63,11 +66,6 @@ typedef union {
  */
 #define ENDIAN_TEST_IS_LITTLE	(((EndianTestU){i:1}).c[0])
 
-/* gcc allows us to use PPC specific instructions (inline assembly) */
-#if  defined(_ARCH_PPC) || defined(__PPC__) || defined(__PPC)
-#define ASSEMBLEPPC
-#endif
-
 #else /* not gcc */
 
 #ifndef INLINE
@@ -84,17 +82,34 @@ static const EndianTestU endianTester={1,};
 
 #endif /* if __GNUC__ */
 
+
+/* gcc allows us to use PPC specific instructions (inline assembly) */
+#if  defined(_ARCH_PPC) || defined(__PPC__) || defined(__PPC)
+#ifdef __GNUC__
+#define ASSEMBLEPPC
+#else
+#error "You have to find a way to generate inline assembly for this compiler"
+#endif
+#endif
+
+#ifdef ASSEMBLEPPC
+#define __iobarrier	do { asm volatile ("eieio"); } while(0)
+#else
+#warning "Unknown IO barrier/synchronization for this CPU (add an #ifdef <YourCpu> around this warning if none needed by your CPU)"
+#define __iobarrier do{}while(0)
+#endif
+
 static INLINE unsigned long
-ld_le32(volatile void *pval)
+in_le32(volatile void *pval)
 {
+register unsigned long rval;
 	if (ENDIAN_TEST_IS_LITTLE) {
 		if (sizeof(unsigned long)==4) {
-			return *(unsigned long*)pval;
+			rval = *(unsigned long*)pval;
 		} else if (sizeof(unsigned int)==4) {
-			return *(unsigned int*)pval;
+			rval = *(unsigned int*)pval;
 		} else {
 			/* brute force; should be optimized away */
-			unsigned long rval;
 			int i;
 			for (i=3,rval=0; i>=0; i--) {
 				rval<<=8;
@@ -106,42 +121,71 @@ ld_le32(volatile void *pval)
 		{
 		register unsigned long rval;
 		__asm__ __volatile__("lwbrx %0, 0, %1":"=r"(rval):"r"(pval));
-		return rval;
 		}
 #else
 		{
 		unsigned char *cp=(unsigned char*)pval;
 		/* brute force */
-		return (cp[0]<<24) | (cp[1]<<16) | (cp[2]<<8) | cp[3];
+		rval = (cp[0]<<24) | (cp[1]<<16) | (cp[2]<<8) | cp[3];
 		}
 #endif
 	}
+	__iobarrier;
+	return rval;
+}
+
+static INLINE unsigned long
+in_be32(volatile void *pval)
+{
+register unsigned long rval=ntohl(*(volatile unsigned long*)pval);
+	__iobarrier;
+	return rval;
 }
 
 static INLINE unsigned short
-ld_le16(volatile unsigned short *pval)
+in_le16(volatile unsigned short *pval)
 {
+register unsigned short rval;
 		if (ENDIAN_TEST_IS_LITTLE) {
-				return *pval;
+				rval = *pval;
 		} else {
 #ifdef ASSEMBLEPPC
 		{
 		register unsigned short rval;
 		__asm__ __volatile__("lhbrx %0, 0, %1":"=r"(rval):"r"(pval));
-		return rval;
 		}
 #else
 		{
 		unsigned char *cp=(unsigned char*)pval;
 		/* brute force */
-		return (cp[0]<<8) | cp[1];
+		rval = (cp[0]<<8) | cp[1];
 		}
 #endif
 		}
+		__iobarrier;
+		return rval;
+}
+
+static INLINE unsigned short
+in_be16(volatile void *pval)
+{
+register unsigned short rval=ntohs(*(volatile unsigned short*)pval);
+	__iobarrier;
+	return rval;
+}
+
+
+static INLINE unsigned char
+in_8(volatile unsigned char *pval)
+{
+register unsigned char rval=*pval;
+	__iobarrier;
+	return rval;
+	
 }
 
 static INLINE void
-st_le32(volatile void *addr, unsigned long val)
+out_le32(volatile void *addr, unsigned long val)
 {
 		if (ENDIAN_TEST_IS_LITTLE) {
 			if (sizeof(unsigned long)==4) {
@@ -188,10 +232,18 @@ st_le32(volatile void *addr, unsigned long val)
 		}
 #endif
 		}
+		__iobarrier;
 }
 
 static INLINE void
-st_le16(volatile void *addr, unsigned short val)
+out_be32(volatile void *addr, unsigned long val)
+{
+	*(volatile unsigned long*)addr = htonl(val);
+	__iobarrier;
+}
+
+static INLINE void
+out_le16(volatile void *addr, unsigned short val)
 {
 		if (ENDIAN_TEST_IS_LITTLE) {
 				*(volatile unsigned short*)addr=val;
@@ -209,6 +261,21 @@ st_le16(volatile void *addr, unsigned short val)
 		}
 #endif
 		}
+		__iobarrier;
+}
+
+static INLINE void
+out_be32(volatile void *addr, unsigned short val)
+{
+	*(volatile unsigned short*)addr = htons(val);
+	__iobarrier;
+}
+
+static INLINE void
+out_8(volatile void *addr, unsigned char val)
+{
+		*(volatile unsigned char*)addr=val;
+		__iobarrier;
 }
 
 #endif /* defined(__rtems) */
