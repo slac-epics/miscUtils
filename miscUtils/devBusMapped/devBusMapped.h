@@ -1,6 +1,6 @@
 #ifndef DEV_BUS_MAPPED_SUPPORT_H
 #define DEV_BUS_MAPPED_SUPPORT_H
-/* $Id: devBusMapped.h,v 1.1.1.1 2003/08/01 23:28:18 till Exp $ */
+/* $Id: devBusMapped.h,v 1.2 2003/08/12 21:51:03 till Exp $ */
 
 /* Unified device support for simple, bus-mapped device registers */
 
@@ -81,6 +81,10 @@ devBusVmeLinkInit(DBLINK *l, DevBusMappedPvt pvt, dbCommon *prec);
 /* registry for drivers to enter their base addresses */
 extern void	*devBusMappedRegistryId;
 
+/* Modifications to registers maintained by devBusMapped must be
+ * protected by this mutex.
+ * TODO: implement a finer grained locking scheme
+ */
 extern epicsMutexId	devBusMappedMutex;
 
 #endif
