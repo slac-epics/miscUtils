@@ -1,9 +1,5 @@
 #CONFIG
-ifneq ($(USE_NEW_EPICS),YES)
 INSTALL_LOCATION_APP=/afs/slac/g/spear/epics/site
-else
-INSTALL_LOCATION_APP=/afs/slac/g/spear/newepics/site
-endif
 include $(TOP)/configure/CONFIG_APP
 # Add any changes to make definitions here
 
