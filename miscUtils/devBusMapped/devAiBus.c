@@ -46,9 +46,10 @@
 #include	"recSup.h"
 #include	"devSup.h"
 #include	"aiRecord.h"
+#include        "epicsExport.h"
 
 #define DEV_BUS_MAPPED_PVT
-#include	<devBusMapped.h>
+#include	"devBusMapped.h"
 
 /* Create the dset for devAiBus */
 static long init_record();
@@ -71,6 +72,7 @@ struct {
 	read_ai,
 	NULL
 };
+epicsExportAddress(dset, devAiBus);
 
 
 static long init_record(aiRecord *prec)

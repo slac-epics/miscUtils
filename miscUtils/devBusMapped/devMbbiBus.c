@@ -30,6 +30,7 @@
 #include	"recSup.h"
 #include	"devSup.h"
 #include	"mbbiRecord.h"
+#include        "epicsExport.h"
 
 #define DEV_BUS_MAPPED_PVT
 #include	"devBusMapped.h"
@@ -52,6 +53,7 @@ struct {
 	devBusMappedGetIointInfo,
 	read_mbbi
 };
+epicsExportAddress(dset, devMbbiBus);
 
 static long init_record(mbbiRecord *pmbbi)
 {

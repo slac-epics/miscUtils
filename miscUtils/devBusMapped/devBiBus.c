@@ -46,12 +46,13 @@
 #include	"dbDefs.h"
 #include	"dbAccess.h"
 #include	"recGbl.h"
-#include    "recSup.h"
+#include        "recSup.h"
 #include	"devSup.h"
 #include	"biRecord.h"
+#include        "epicsExport.h"
 
 #define DEV_BUS_MAPPED_PVT
-#include	<devBusMapped.h>
+#include	"devBusMapped.h"
 
 /* Create the dset for devBiBus */
 static long init_record();
@@ -71,6 +72,7 @@ struct {
 	devBusMappedGetIointInfo,
 	read_bi
 };
+epicsExportAddress(dset, devBiBus);
 
 static long init_record(biRecord *prec)
 {

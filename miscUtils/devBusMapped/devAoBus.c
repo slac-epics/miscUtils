@@ -46,9 +46,10 @@
 #include	"recSup.h"
 #include	"devSup.h"
 #include	"aoRecord.h"
+#include        "epicsExport.h"
 
 #define DEV_BUS_MAPPED_PVT
-#include	<devBusMapped.h>
+#include	"devBusMapped.h"
 
 /* Create the dset for devAoBus */
 static long init_record();
@@ -70,6 +71,7 @@ struct {
 	write_ao,
 	NULL
 };
+epicsExportAddress(dset, devAoBus);
 
 
 static long init_record(aoRecord *prec)

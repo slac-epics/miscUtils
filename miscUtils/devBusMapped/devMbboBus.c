@@ -46,9 +46,10 @@
 #include	"recSup.h"
 #include	"devSup.h"
 #include	"mbboRecord.h"
+#include        "epicsExport.h"
 
 #define DEV_BUS_MAPPED_PVT
-#include	<devBusMapped.h>
+#include	"devBusMapped.h"
 
 /* Create the dset for devMbboBus */
 static long init_record();
@@ -68,6 +69,7 @@ struct {
 	devBusMappedGetIointInfo,
 	write_mbbo
 };
+epicsExportAddress(dset, devMbboBus);
 
 static long init_record(mbboRecord *pmbbo)
 {

@@ -28,9 +28,10 @@
 #include	"dbDefs.h"
 #include	"dbAccess.h"
 #include	"recGbl.h"
-#include    "recSup.h"
+#include        "recSup.h"
 #include	"devSup.h"
 #include	"boRecord.h"
+#include        "epicsExport.h"
 
 #define DEV_BUS_MAPPED_PVT
 #include	"devBusMapped.h"
@@ -55,8 +56,7 @@ struct {
 	init_record,
 	devBusMappedGetIointInfo,
 	write_bo};
-
-
+epicsExportAddress(dset, devBoBus);
 
 static long init_record(boRecord *prec)
 {

@@ -46,9 +46,10 @@
 #include	"recSup.h"
 #include	"devSup.h"
 #include	"longinRecord.h"
+#include        "epicsExport.h"
 
 #define DEV_BUS_MAPPED_PVT
-#include	<devBusMapped.h>
+#include	"devBusMapped.h"
 
 /* Create the dset for devLiBus */
 static long init_record();
@@ -69,6 +70,7 @@ struct {
 	devBusMappedGetIointInfo,
 	read_longin
 };
+epicsExportAddress(dset, devLiBus);
 
 
 static long init_record(longinRecord *prec)
