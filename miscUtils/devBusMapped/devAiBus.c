@@ -67,7 +67,7 @@ struct {
 	NULL,
 	NULL,
 	init_record,
-	NULL,
+	devBusMappedGetIointInfo,
 	read_ai,
 	NULL
 };

@@ -66,7 +66,7 @@ struct {
 	NULL,
 	NULL,
 	init_record,
-	NULL,
+	devBusMappedGetIointInfo,
 	write_ao,
 	NULL
 };

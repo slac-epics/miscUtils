@@ -1,6 +1,6 @@
 #ifndef DEV_BUS_MAPPED_SUPPORT_H
 #define DEV_BUS_MAPPED_SUPPORT_H
-/* $Id: devBusMapped.h,v 1.3 2003/08/13 23:19:18 till Exp $ */
+/* $Id: devBusMapped.h,v 1.4 2003/08/15 20:00:53 till Exp $ */
 
 /* Unified device support for simple, bus-mapped device registers */
 
@@ -36,6 +36,7 @@
 
 #include <dbCommon.h>
 #include <dbAccess.h>
+#include <dbScan.h>
 #include <recGbl.h>
 #include <epicsMutex.h>
 
@@ -78,6 +79,7 @@ typedef struct DevBusMappedPvtRec_ {
 	dbCommon			*prec;	/* record this devsup is attached to */
 	DevBusMappedAccess	acc;	/* pointer to access methods         */
 	DevBusMappedDev		dev;	/* per-device info                   */
+	IOSCANPVT			scan;	/* io intr scan list for 'prec'      */
 	void				*udata;	/* private data for access methods   */
 	volatile void		*addr;	/* reg. address (offset from base)   */
 } DevBusMappedPvtRec;
@@ -111,8 +113,17 @@ devBusMappedRegister(char *name, volatile void * baseAddress);
 int
 devBusMappedRegisterIO(char *name, DevBusMappedAccess accessMethods);
 
+/* Register an IO Intr scan list; returns 0 on success, nonzero on failure */
+int
+devBusMappedRegisterIOScan(char *name, IOSCANPVT scan);
+
 /* Find the 'devBusMappedDev' of a registered device by name */
 DevBusMappedDev
 devBusMappedFind(char *name);
 
+/* Helper to retrieve the 'scan' (IOSCANPVT) field of a DevBusMappedPvtRec
+ * attached to a record's DPVT field.
+ */
+long
+devBusMappedGetIointInfo(int delFrom, dbCommon *prec, IOSCANPVT *ppvt);
 #endif

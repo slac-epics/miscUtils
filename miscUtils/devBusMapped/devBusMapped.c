@@ -14,6 +14,7 @@
 /* just any unique address */
 static void	*registryId = (void*)&registryId;
 static void	*ioRegistryId = (void*)&ioRegistryId;
+static void	*ioscanRegistryId = (void*)&ioscanRegistryId;
 
 
 #define DECL_INP(name) static int name(DevBusMappedPvt pvt, unsigned *pv, dbCommon *prec)
@@ -84,7 +85,7 @@ static DevBusMappedAccessRec io8s  = { in8s, out8 };
 unsigned long
 devBusVmeLinkInit(DBLINK *l, DevBusMappedPvt pvt, dbCommon *prec)
 {
-char          *plus,*comma,*cp;
+char          *plus,*comma,*comma1,*cp;
 unsigned long offset = 0;
 unsigned long rval   = 0;
 char          *base  = 0;
@@ -115,6 +116,10 @@ char          *base  = 0;
 			if ( (comma=strchr(cp,',')) ) {
 				*comma++=0;
 				cp = comma;
+			}
+			if ( (comma1=strchr(cp,',')) ) {
+				*comma1++=0;
+				cp = comma1;
 			}
 
 			if ( plus ) {
@@ -182,10 +187,20 @@ char          *base  = 0;
 				} else {
 					recGblRecordError(S_db_badField, (void*)prec,
 									  "devXXBus (init_record) Invalid ACCESS string");
+					break;
 				}
 			}
 
-			/* fall thru */
+			pvt->scan = 0;
+			if ( comma1 ) {
+				void *found;
+				if ( (found = registryFind( ioscanRegistryId, comma1 )) ) {
+					pvt->scan = found;
+				} else {
+					recGblRecordError(S_db_badField, (void*)prec,
+									  "devXXBus (init_record) Invalid IOSCANPVT string");
+				}
+			}
 
     default :
 		break;
@@ -248,6 +263,20 @@ char *n;
 	return ! registryAdd( ioRegistryId, n, (void*) acc );
 }
 
+int
+devBusMappedRegisterIOScan(char *name, IOSCANPVT scan)
+{
+char *n;
+
+	/* EPICS registry doesn't copy the name string, so we do */
+	if ( 0 == (n=malloc(strlen(name)+1)) )
+		return 0;
+
+	strcpy(n,name);
+
+	return ! registryAdd( ioscanRegistryId, n, (void*) scan );
+}
+
 /* Find the 'devBusMappedDev' of a registered device by name */
 DevBusMappedDev
 devBusMappedFind(char *name)
@@ -255,4 +284,13 @@ devBusMappedFind(char *name)
 	return registryFind(registryId, name);
 }
 
-
+long
+devBusMappedGetIointInfo(int delFrom, dbCommon *prec, IOSCANPVT *ppvt)
+{
+DevBusMappedPvt pvt = prec->dpvt;
+	/* a 'pvt' with no valid 'scan'  (scan==NULL) will yield an
+	 * error (dbScan.c)
+	 */
+	*ppvt = pvt->scan;
+	return 0;
+}
