@@ -4,7 +4,10 @@ include $(TOP)/configure/RELEASE
 -include $(TOP)/configure/RELEASE.$(EPICS_HOST_ARCH)
 CONFIG=$(EPICS_BASE)/configure
 include $(CONFIG)/CONFIG
-INSTALL_LOCATION = $(TOP)/../..
+INSTALL_LOCATION = $(TOP)
+ifndef INSTALL_LOCATION_APP
+INSTALL_LOCATION_APP=/afs/slac/g/spear/epics/site
+endif
 ifdef INSTALL_LOCATION_APP
 INSTALL_LOCATION = $(INSTALL_LOCATION_APP)
 endif
