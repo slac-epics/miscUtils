@@ -10,7 +10,7 @@ DIRS += seq ipac gtr gpib ether_ip
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Gpib))
 # xycomIpac first since it installs xipIo.h used by acromagIpac.
-DIRS := xycomIpac acromagIpac
+DIRS += xycomIpac acromagIpac
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Ipac))
 
 include $(TOP)/configure/RULES_TOP
