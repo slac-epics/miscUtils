@@ -6,8 +6,8 @@ include $(TOP)/configure/CONFIG
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Utils))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard drv*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Lib))
-DIRS += ipac gtr
+DIRS += ipac gtr seq
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
-#DIRS += ether_ip
+DIRS += ether_ip
 
 include $(TOP)/configure/RULES_TOP
