@@ -1,7 +1,7 @@
 #ifndef TILLS_INPUT_OUTPUT_OPERA_H
 #define TILLS_INPUT_OUTPUT_OPERA_H
 
-/* $Id: basicIoOps.h,v 1.1 2003/02/25 01:59:45 till Exp $ */
+/* $Id: basicIoOps.h,v 1.2 2003/03/21 20:00:49 till Exp $ */
 
 #ifdef __rtems__
 #include <rtems.h>
@@ -124,13 +124,13 @@ static const __EndianTestU endianTester={(int)1};
 #warning "Unknown IO barrier/synchronization for this CPU (add an #ifdef <YourCpu> around this warning if none needed by your CPU)"
 #endif
 
-#ifndef iobarrier_r()
+#ifndef iobarrier_r
 #define iobarrier_r() do{}while(0)
 #endif
-#ifndef iobarrier_rw()
+#ifndef iobarrier_rw
 #define iobarrier_rw() do{}while(0)
 #endif
-#ifndef iobarrier_w()
+#ifndef iobarrier_w
 #define iobarrier_w() do{}while(0)
 #endif
 
