@@ -5,6 +5,7 @@ include $(TOP)/configure/CONFIG
 
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Utils))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard drv*))
+DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard dev*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Lib))
 DIRS += seq ipac gtr gpib ether_ip restore
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
