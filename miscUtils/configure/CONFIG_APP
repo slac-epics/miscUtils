@@ -15,3 +15,9 @@ endif
 
 # dbst based database optimization (default: NO)
 DB_OPT = NO
+# Needed for the sequencer
+SEQ_VERSION = 2.0.2
+PVCA   = TRUE
+PVFILE = FALSE
+PVTKL  = FALSE
+
