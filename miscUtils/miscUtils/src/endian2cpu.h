@@ -1,9 +1,9 @@
 #ifndef LITTLE_ENDIAN_TO_CPU_CONVERSION_H
 #define LITTLE_ENDIAN_TO_CPU_CONVERSION_H
 
-/* $Id: endian2cpu.h,v 1.1 2002/04/29 20:08:27 till Exp $ */
+/* $Id: endian2cpu.h,v 1.2 2002/08/16 19:49:51 till Exp $ */
 
-#ifdef __rtems
+#ifdef __rtems__
 #include <libcpu/io.h> /* rtems has these already */
 #else
 
@@ -274,5 +274,5 @@ out_8(volatile void *addr, unsigned char val)
 		__iobarrier;
 }
 
-#endif /* defined(__rtems) */
+#endif /* defined(__rtems__) */
 #endif
