@@ -1,7 +1,7 @@
 #ifndef TILLS_INPUT_OUTPUT_OPERA_H
 #define TILLS_INPUT_OUTPUT_OPERA_H
 
-/* $Id: endian2cpu.h,v 1.4 2003/02/24 22:28:57 till Exp $ */
+/* $Id: basicIoOps.h,v 1.1 2003/02/25 01:59:45 till Exp $ */
 
 #ifdef __rtems__
 #include <rtems.h>
@@ -114,15 +114,24 @@ static const __EndianTestU endianTester={(int)1};
 #endif
 
 #ifdef ASSEMBLEPPC
-#define __iobarrier	do { __asm__ __volatile__ ("eieio"); } while(0)
+#define __eieio()	do { __asm__ __volatile__ ("eieio"); } while(0)
+#define iobarrier_r()	eieio()
+#define iobarrier_rw()	eieio()
+#define iobarrier_w()	eieio()
 #elif defined(__i386__) || defined(__i386) || defined(__sparc__) || defined(__sparc)
 /* nothing to do on __i386__ */
 #else
 #warning "Unknown IO barrier/synchronization for this CPU (add an #ifdef <YourCpu> around this warning if none needed by your CPU)"
 #endif
 
-#ifndef __iobarrier
-#define __iobarrier do{}while(0)
+#ifndef iobarrier_r()
+#define iobarrier_r() do{}while(0)
+#endif
+#ifndef iobarrier_rw()
+#define iobarrier_rw() do{}while(0)
+#endif
+#ifndef iobarrier_w()
+#define iobarrier_w() do{}while(0)
 #endif
 
 static _INLINE_ __TillsIoOps32_t
@@ -145,7 +154,7 @@ register __TillsIoOps32_t rval;
 		}
 #endif
 	}
-	__iobarrier;
+	iobarrier_r();
 	return rval;
 }
 
@@ -153,7 +162,7 @@ static _INLINE_ __TillsIoOps32_t
 in_be32(volatile __TillsIoOps32_t *pval)
 {
 register __TillsIoOps32_t rval=*pval;
-	__iobarrier;
+	iobarrier_r();
 	return ntohl(rval);
 }
 
@@ -177,7 +186,7 @@ register __TillsIoOps16_t rval;
 		}
 #endif
 	}
-	__iobarrier;
+	iobarrier_r();
 	return rval;
 }
 
@@ -185,7 +194,7 @@ static _INLINE_ __TillsIoOps16_t
 in_be16(volatile __TillsIoOps16_t *pval)
 {
 register __TillsIoOps16_t rval=*pval;
-	__iobarrier;
+	iobarrier_r();
 	return ntohs(rval);
 }
 
@@ -194,7 +203,7 @@ static _INLINE_ unsigned char
 in_8(volatile unsigned char *pval)
 {
 register unsigned char rval=*pval;
-	__iobarrier;
+	iobarrier_r();
 	return rval;
 	
 }
@@ -221,14 +230,14 @@ out_le32(volatile __TillsIoOps32_t *addr, __TillsIoOps32_t val)
 		}
 #endif
 	}
-	__iobarrier;
+	iobarrier_w();
 }
 
 static _INLINE_ void
 out_be32(volatile __TillsIoOps32_t *addr, __TillsIoOps32_t val)
 {
 	*addr = htonl(val);
-	__iobarrier;
+	iobarrier_w();
 }
 
 static _INLINE_ void
@@ -249,21 +258,21 @@ out_le16(volatile __TillsIoOps16_t *addr, __TillsIoOps16_t val)
 		}
 #endif
 	}
-	__iobarrier;
+	iobarrier_w();
 }
 
 static _INLINE_ void
 out_be16(volatile __TillsIoOps16_t *addr, __TillsIoOps16_t val)
 {
 	*addr = htons(val);
-	__iobarrier;
+	iobarrier_w();
 }
 
 static _INLINE_ void
 out_8(volatile unsigned char *addr, unsigned char val)
 {
 	*addr=val;
-	__iobarrier;
+	iobarrier_w();
 }
 
 #endif /* defined(__rtems__) */
