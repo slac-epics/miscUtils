@@ -9,6 +9,7 @@ TEMPLATE_TOP=$(TOP)/../base/templates/makeBaseApp/top
 
 #If using macro substitutions, point MSI at the binary:
 #MSI=<path>extensions/bin/$(EPICS_HOST_ARCH)/msi
+SITE=/afs/slac/g/spear/epics/site
 
 # EPICS_BASE usually appears last so other apps can override stuff:
-EPICS_BASE=$(TOP)/../base
+EPICS_BASE=/afs/slac/g/spear/epics/base
