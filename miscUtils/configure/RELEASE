@@ -6,5 +6,9 @@
 #MSI=/afs/slac/g/spear/epics/extensions/bin/$(EPICS_HOST_ARCH)/msi
 
 # EPICS_BASE usually appears last so other apps can override stuff:
+ifneq ($(USE_NEW_EPICS),YES)
 EPICS_BASE=/afs/slac/g/spear/epics/base
+else
+EPICS_BASE=/afs/slac/g/spear/newepics/base
+endif
 TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
