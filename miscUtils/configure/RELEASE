@@ -5,11 +5,11 @@
 TEMPLATE_TOP=$(TOP)/../base/templates/makeBaseApp/top
 
 #If using the sequencer, point SNCSEQ at its top directory:
-#SNCSEQ=$(EPICS_BASE)/../modules/soft/seq
+EPICS_SITE=/afs/slac/g/spear/epics/site
+SNCSEQ=$(EPICS_SITE)
 
 #If using macro substitutions, point MSI at the binary:
-#MSI=<path>extensions/bin/$(EPICS_HOST_ARCH)/msi
-SITE=/afs/slac/g/spear/epics/site
+#MSI=/afs/slac/g/spear/epics/extensions/bin/$(EPICS_HOST_ARCH)/msi
 
 # EPICS_BASE usually appears last so other apps can override stuff:
 EPICS_BASE=/afs/slac/g/spear/epics/base
