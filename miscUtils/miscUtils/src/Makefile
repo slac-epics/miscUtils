@@ -13,7 +13,7 @@ Com_DIR          = $(EPICS_BASE_LIB)
 
 #=============================
 
-INC = endian2cpu.h
+INC = basicIoOps.h
 
 # xxxRecord.h will be created from xxxRecord.dbd
 #DBDINC += xxxRecord
