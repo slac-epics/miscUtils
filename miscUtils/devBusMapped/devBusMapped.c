@@ -89,6 +89,7 @@ char          *plus,*comma,*comma1,*cp;
 unsigned long offset = 0;
 unsigned long rval   = 0;
 char          *base  = 0;
+char          *endp;
 
 	if ( !pvt ) {
 		assert( pvt = malloc( sizeof(*pvt) ) );
@@ -123,14 +124,16 @@ char          *base  = 0;
 			}
 
 			if ( plus ) {
-				if ( 1!= sscanf(plus,"%li",&offset) ) {
+				offset = strtoul(plus, &endp, 0);
+				if ( !*plus || *endp ) {
 					recGblRecordError(S_db_badField, (void*)prec,
 									  "devXXBus (init_record) Invalid OFFSET string");
 					break;
 				}
 			}
 
-			if ( 1 == sscanf(base,"%li",&rval) ) {
+			rval = strtoul(base, &endp, 0);
+			if ( *base && !*endp ) {
 				int  i;
 				char buf[15];
 				/* they specified a number; create a registry entry on the fly... */
