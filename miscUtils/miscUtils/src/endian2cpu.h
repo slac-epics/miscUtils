@@ -1,7 +1,7 @@
 #ifndef LITTLE_ENDIAN_TO_CPU_CONVERSION_H
 #define LITTLE_ENDIAN_TO_CPU_CONVERSION_H
 
-/* $Id: le2cpu.h,v 1.1 2002/04/04 00:23:01 strauman Exp $ */
+/* $Id: endian2cpu.h,v 1.1 2002/04/29 20:08:27 till Exp $ */
 
 #ifdef __rtems
 #include <libcpu/io.h> /* rtems has these already */
@@ -57,27 +57,23 @@ typedef union {
 
 #ifdef __GNUC__
 
-#ifndef INLINE
-#define INLINE inline	/* we have inline feature */
-#endif
+#define _INLINE_ __inline__	/* we have inline feature */
 
 /* GCC doesn't optimize a static const variable away :-(
  * we may cast unions, however and this works fine
  */
-#define ENDIAN_TEST_IS_LITTLE	(((EndianTestU){i:1}).c[0])
+#define ENDIAN_TEST_IS_LITTLE	(((EndianTestU){1}).c[0])
 
 #else /* not gcc */
 
-#ifndef INLINE
-#define INLINE 		/* has probably no inline feature
+#define _INLINE_	/* has probably no inline feature
 					 * NOTE: this may lead to instantiation of these routines
 					 *       in every object file which uses this header!
 					 *       Using other compilers than gcc is only supported
 					 *       for testing...
 					 */
-#endif
 
-static const EndianTestU endianTester={1,};
+static const EndianTestU endianTester={i:1,};
 #define ENDIAN_TEST_IS_LITTLE	(endianTester.c[0])
 
 #endif /* if __GNUC__ */
@@ -93,13 +89,13 @@ static const EndianTestU endianTester={1,};
 #endif
 
 #ifdef ASSEMBLEPPC
-#define __iobarrier	do { asm volatile ("eieio"); } while(0)
+#define __iobarrier	do { __asm__ __volatile__ ("eieio"); } while(0)
 #else
 #warning "Unknown IO barrier/synchronization for this CPU (add an #ifdef <YourCpu> around this warning if none needed by your CPU)"
 #define __iobarrier do{}while(0)
 #endif
 
-static INLINE unsigned long
+static _INLINE_ unsigned long
 in_le32(volatile void *pval)
 {
 register unsigned long rval;
@@ -134,7 +130,7 @@ register unsigned long rval;
 	return rval;
 }
 
-static INLINE unsigned long
+static _INLINE_ unsigned long
 in_be32(volatile void *pval)
 {
 register unsigned long rval=ntohl(*(volatile unsigned long*)pval);
@@ -142,7 +138,7 @@ register unsigned long rval=ntohl(*(volatile unsigned long*)pval);
 	return rval;
 }
 
-static INLINE unsigned short
+static _INLINE_ unsigned short
 in_le16(volatile unsigned short *pval)
 {
 register unsigned short rval;
@@ -166,7 +162,7 @@ register unsigned short rval;
 		return rval;
 }
 
-static INLINE unsigned short
+static _INLINE_ unsigned short
 in_be16(volatile void *pval)
 {
 register unsigned short rval=ntohs(*(volatile unsigned short*)pval);
@@ -175,7 +171,7 @@ register unsigned short rval=ntohs(*(volatile unsigned short*)pval);
 }
 
 
-static INLINE unsigned char
+static _INLINE_ unsigned char
 in_8(volatile unsigned char *pval)
 {
 register unsigned char rval=*pval;
@@ -184,7 +180,7 @@ register unsigned char rval=*pval;
 	
 }
 
-static INLINE void
+static _INLINE_ void
 out_le32(volatile void *addr, unsigned long val)
 {
 		if (ENDIAN_TEST_IS_LITTLE) {
@@ -235,14 +231,14 @@ out_le32(volatile void *addr, unsigned long val)
 		__iobarrier;
 }
 
-static INLINE void
+static _INLINE_ void
 out_be32(volatile void *addr, unsigned long val)
 {
 	*(volatile unsigned long*)addr = htonl(val);
 	__iobarrier;
 }
 
-static INLINE void
+static _INLINE_ void
 out_le16(volatile void *addr, unsigned short val)
 {
 		if (ENDIAN_TEST_IS_LITTLE) {
@@ -264,14 +260,14 @@ out_le16(volatile void *addr, unsigned short val)
 		__iobarrier;
 }
 
-static INLINE void
-out_be32(volatile void *addr, unsigned short val)
+static _INLINE_ void
+out_be16(volatile void *addr, unsigned short val)
 {
 	*(volatile unsigned short*)addr = htons(val);
 	__iobarrier;
 }
 
-static INLINE void
+static _INLINE_ void
 out_8(volatile void *addr, unsigned char val)
 {
 		*(volatile unsigned char*)addr=val;
