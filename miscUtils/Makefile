@@ -13,6 +13,6 @@ DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Gpib))
 # xycomIpac first since it installs xipIo.h used by acromagIpac.
 DIRS += xycomIpac acromagIpac
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Ipac))
-DIRS += Hy8002 Hy8401
+#DIRS += Hy8002 Hy8401
 
 include $(TOP)/configure/RULES_TOP
