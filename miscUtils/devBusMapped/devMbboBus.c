@@ -47,6 +47,7 @@
 #include	"devSup.h"
 #include	"mbboRecord.h"
 
+#define DEV_BUS_MAPPED_PVT
 #include	<devBusMapped.h>
 
 /* Create the dset for devMbboBus */
@@ -71,10 +72,11 @@ struct {
 static long init_record(mbboRecord *pmbbo)
 {
 DevBusMappedPvt pvt;
+unsigned		v;
 
    	if ( devBusVmeLinkInit(&pmbbo->out, 0, (dbCommon*) pmbbo) ) {
 		recGblRecordError(S_db_badField,(void *)pmbbo,
-			"devMbboBus (init_record) Illegal INP field");
+			"devMbboBus (init_record) Illegal OUT field");
 		return(S_db_badField);
 	}
 
@@ -85,7 +87,8 @@ DevBusMappedPvt pvt;
 
     pmbbo->mask <<= pmbbo->shft;
 
-	pmbbo->rval  = pmbbo->rbv = pvt->acc->rd(pvt);
+	pvt->acc->rd(pvt,&v,(dbCommon*)pmbbo);
+	pmbbo->rval  = pmbbo->rbv = v;
 	pmbbo->rval &= pmbbo->mask;
 
 	/* PINI means that the initial value shall be forced out to
@@ -104,15 +107,28 @@ DevBusMappedPvt pvt;
 static long write_mbbo(mbboRecord *pmbbo)
 {
 DevBusMappedPvt pvt = pmbbo->dpvt;
-unsigned long   data;
+unsigned 		data;
+long			rval;
 
-	pmbbo->rbv = data = pvt->acc->rd(pvt);
+	/* we could maintain a 'per word' mutex but that would be
+	 * too complicated...
+	 */
+epicsMutexLock(devBusMappedMutex);
+
+	if ( (rval = pvt->acc->rd(pvt, &data, (dbCommon *)pmbbo)) < 0 ) {
+		goto leave;
+	}
+
+	pmbbo->rbv = data;
 
 	data &= ~pmbbo->mask;
 
     data |= (pmbbo->rval & pmbbo->mask);
 
-	pvt->acc->wr(pvt,data);
+	rval = pvt->acc->wr(pvt, data, (dbCommon *)pmbbo);
 
-    return(0);
+leave:
+epicsMutexUnlock(devBusMappedMutex);
+
+	return rval;
 }

@@ -1,6 +1,6 @@
 #ifndef DEV_BUS_MAPPED_SUPPORT_H
 #define DEV_BUS_MAPPED_SUPPORT_H
-/* $Id$ */
+/* $Id: devBusMapped.h,v 1.1.1.1 2003/08/01 23:28:18 till Exp $ */
 
 /* Unified device support for simple, bus-mapped device registers */
 
@@ -23,9 +23,11 @@
  *  Finally, the <offset> is added to calculate the real register
  *  address.
  *
- *  <method> may be any of 'be8','be16','be32','le16','le32' to 
+ *  <method> may be any of 'be8[s]','be16[s]','be32','le16[s]','le32' to 
  *  indicate the access that should be used (big/little endian, data
- *  width). If no <method> is specified, "be32" is assumed.
+ *  width; the optional 's' [e.g. le16s] indicates that the short
+ *  little endian data are signed). If no <method> is specified,
+ *  "be32" is assumed.
  *
  *  In addition, user supported access methods are supported. A driver
  *  can simply add an entry to the devBusMappedRegistryId providing
@@ -41,8 +43,11 @@
 typedef struct DevBusMappedPvtRec_ *DevBusMappedPvt;
 typedef struct DevBusMappedAccessRec_ *DevBusMappedAccess;
 
-typedef unsigned (*DevBusMappedRead)(DevBusMappedPvt pvt);
-typedef void (*DevBusMappedWrite)(DevBusMappedPvt pvt, unsigned value);
+/* read and write methods which are used by the device support 'read' and 'write'
+ * routines.
+ */
+typedef int (*DevBusMappedRead)(DevBusMappedPvt pvt, unsigned *pvalue, dbCommon *prec);
+typedef int (*DevBusMappedWrite)(DevBusMappedPvt pvt, unsigned value, dbCommon *prec);
 
 
 
@@ -54,7 +59,8 @@ typedef struct DevBusMappedAccessRec_ {
 typedef struct DevBusMappedPvtRec_ {
 	dbCommon			*prec;	/* record this devsup is attached to */
 	DevBusMappedAccess	acc;	/* pointer to access methods         */
-	volatile void		*addr;
+	volatile void		*addr;	/* base address of device            */
+	void				*udata;	/* private data for access methods   */
 } DevBusMappedPvtRec;
 
 /* parse the link in *l and setup the pvt structure; the
@@ -74,5 +80,7 @@ devBusVmeLinkInit(DBLINK *l, DevBusMappedPvt pvt, dbCommon *prec);
 
 /* registry for drivers to enter their base addresses */
 extern void	*devBusMappedRegistryId;
+
+extern epicsMutexId	devBusMappedMutex;
 
 #endif

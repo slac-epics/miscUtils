@@ -50,6 +50,7 @@
 #include	"devSup.h"
 #include	"biRecord.h"
 
+#define DEV_BUS_MAPPED_PVT
 #include	<devBusMapped.h>
 
 /* Create the dset for devBiBus */
@@ -86,7 +87,14 @@ static long init_record(biRecord *prec)
 
 static long read_bi(biRecord *pbi)
 {
+unsigned		v;
+long			rval;
 DevBusMappedPvt pvt = pbi->dpvt;
-	pbi->rval = (long)pvt->acc->rd(pvt) & pbi->mask;
-    return(0);
+	rval = pvt->acc->rd(pvt, &v, (dbCommon*)pbi);
+	if ( rval >= 0 ) {
+		if ( pbi->mask )
+		 	v &= pbi->mask;
+		pbi->rval = v;
+	}
+    return(rval);
 }

@@ -47,6 +47,7 @@
 #include	"devSup.h"
 #include	"longinRecord.h"
 
+#define DEV_BUS_MAPPED_PVT
 #include	<devBusMapped.h>
 
 /* Create the dset for devLiBus */
@@ -84,6 +85,5 @@ static long init_record(longinRecord *prec)
 static long read_longin(longinRecord *plongin)
 {
 DevBusMappedPvt pvt = plongin->dpvt;
-	plongin->val = (long)pvt->acc->rd(pvt);
-	return 0;
+	return pvt->acc->rd(pvt, &plongin->val, (dbCommon*)plongin);
 }

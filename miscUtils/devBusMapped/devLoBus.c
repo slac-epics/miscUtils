@@ -47,6 +47,7 @@
 #include	"devSup.h"
 #include	"longoutRecord.h"
 
+#define DEV_BUS_MAPPED_PVT
 #include 	<devBusMapped.h>
 
 /* Create the dset for devLoBus */
@@ -71,24 +72,28 @@ struct {
 
 static long init_record(longoutRecord *prec)
 {
+long rval = 0;
 	if ( devBusVmeLinkInit(&prec->out, 0, (dbCommon*)prec) ) {
 		recGblRecordError(S_db_badField,(void *)prec,
-			"devLoBus (init_record) Illegal INP field");
+			"devLoBus (init_record) Illegal OUT field");
 		return(S_db_badField);
 	}
 
 	if (!prec->pini) {
 		DevBusMappedPvt pvt = prec->dpvt;
-		prec->val = pvt->acc->rd(pvt);
+		rval = pvt->acc->rd(pvt, &prec->val, (dbCommon*)prec);
 		recGblResetAlarms(prec);
 	}
-    return(0);
+    return(rval);
 }
 
 static long write_longout(longoutRecord	*plongout)
 {
 DevBusMappedPvt pvt = plongout->dpvt;
-	pvt->acc->wr(pvt, plongout->val);
-    return(0);
+long			rval;
+epicsMutexLock(devBusMappedMutex);
+	rval = pvt->acc->wr(pvt, plongout->val, (dbCommon*)plongout);
+epicsMutexUnlock(devBusMappedMutex);
+	return rval;
 }
 

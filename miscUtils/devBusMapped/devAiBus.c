@@ -47,6 +47,7 @@
 #include	"devSup.h"
 #include	"aiRecord.h"
 
+#define DEV_BUS_MAPPED_PVT
 #include	<devBusMapped.h>
 
 /* Create the dset for devAiBus */
@@ -87,6 +88,5 @@ static long init_record(aiRecord *prec)
 static long read_ai(aiRecord *pai)
 {
 DevBusMappedPvt pvt = pai->dpvt;
-	pai->rval = (long)pvt->acc->rd(pvt);
-	return 0;
+	return pvt->acc->rd(pvt, &pai->rval, (dbCommon*)pai);
 }

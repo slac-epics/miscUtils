@@ -1,4 +1,4 @@
-TOP=../../..
+TOP=../
 
 include $(TOP)/configure/CONFIG
 #----------------------------------------
@@ -20,8 +20,8 @@ INC     = devBusMapped.h
 DBD		= devBusMapped.dbd
 
 devBusMapped_SRCS += devBusMapped.c
-devBusMapped_SRCS += devAiBus.c devAoBus.c devBiBus.c
-devBusMapped_SRCS += devLiBus.c devLoBus.c devMbboBus.c
+devBusMapped_SRCS += devAiBus.c devAoBus.c devBiBus.c devBoBus.c
+devBusMapped_SRCS += devLiBus.c devLoBus.c devMbboBus.c devMbbiBus.c
 
 #===========================
 

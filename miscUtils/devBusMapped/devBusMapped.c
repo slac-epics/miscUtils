@@ -4,37 +4,96 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <epicsMutex.h>
+#include <epicsThread.h>
+
+
+#define DEV_BUS_MAPPED_PVT
 #include <devBusMapped.h>
 #include <basicIoOps.h>
 
 /* just any unique address */
-void	*devBusMappedRegistryId = (void*)&devBusMappedRegistryId;
+void			*devBusMappedRegistryId = (void*)&devBusMappedRegistryId;
+epicsMutexId	devBusMappedMutex = 0;
 
-static unsigned inbe32(DevBusMappedPvt pvt) { return in_be32(pvt->addr); }
-static unsigned inle32(DevBusMappedPvt pvt) { return in_le32(pvt->addr); }
-static unsigned inbe16(DevBusMappedPvt pvt) { return in_be16(pvt->addr) & 0xffff; }
-static unsigned inle16(DevBusMappedPvt pvt) { return in_le16(pvt->addr) & 0xffff; }
-static unsigned in8(DevBusMappedPvt pvt)	{ return in_8(pvt->addr) & 0xff; }
+static epicsThreadOnceId once = EPICS_THREAD_ONCE_INIT;
 
-static void outbe32(DevBusMappedPvt pvt, unsigned v) { out_be32(pvt->addr,v); }
-static void outle32(DevBusMappedPvt pvt, unsigned v) { out_le32(pvt->addr,v); }
-static void outbe16(DevBusMappedPvt pvt, unsigned v) { out_be16(pvt->addr,v&0xffff); }
-static void outle16(DevBusMappedPvt pvt, unsigned v) { out_le16(pvt->addr,v&0xffff); }
-static void out8(DevBusMappedPvt pvt, unsigned v)    { out_8(pvt->addr, v&0xff); }
+static void myMutexCreate(void *unused) { devBusMappedMutex = epicsMutexMustCreate(); }
 
-static DevBusMappedAccessRec be32 = { inbe32, outbe32 };
-static DevBusMappedAccessRec le32 = { inle32, outle32 };
-static DevBusMappedAccessRec be16 = { inbe16, outbe16 };
-static DevBusMappedAccessRec le16 = { inle16, outle16 };
-static DevBusMappedAccessRec io8  = { in8, out8 };
+#define DECL_INP(name) static int name(DevBusMappedPvt pvt, unsigned *pv, dbCommon *prec)
+#define DECL_OUT(name) static int name(DevBusMappedPvt pvt, unsigned v, dbCommon *prec)
+
+DECL_INP(inbe32)
+	{ *pv = in_be32(pvt->addr);								return 0; }
+DECL_INP(inle32)
+	{ *pv = in_le32(pvt->addr);								return 0; }
+DECL_INP(inbe16)
+	{ *pv = (unsigned short)(in_be16(pvt->addr) & 0xffff);	return 0; }
+DECL_INP(inle16)
+	{ *pv = (unsigned short)(in_le16(pvt->addr) & 0xffff);	return 0; }
+DECL_INP(in8)
+	{ *pv = (unsigned char)(in_8(pvt->addr) & 0xff);		return 0; }
+
+DECL_INP(inbe16s)
+	{ *pv = (signed short)(in_be16(pvt->addr) & 0xffff);	return 0; }
+DECL_INP(inle16s)
+	{ *pv = (signed short)(in_le16(pvt->addr) & 0xffff);	return 0; }
+DECL_INP(in8s)
+	{ *pv = (signed char)(in_8(pvt->addr) & 0xff);			return 0; }
+
+DECL_INP(inm32)
+	{ *pv = *(unsigned *) pvt->addr;						return 0; }
+DECL_INP(inm16)
+	{ *pv = *(unsigned short *)pvt->addr;					return 0; }
+DECL_INP(inm8)
+	{ *pv = *(unsigned char *)pvt->addr;					return 0; }
+
+DECL_INP(inm16s)
+	{ *pv = *(signed short *)pvt->addr;						return 0; }
+DECL_INP(inm8s)
+	{ *pv = *(signed char *)pvt->addr;						return 0; }
+	
+DECL_OUT(outbe32)
+	{ out_be32(pvt->addr,v);		return 0; }
+DECL_OUT(outle32)
+	{ out_le32(pvt->addr,v);		return 0; }
+DECL_OUT(outbe16)
+	{ out_be16(pvt->addr,v&0xffff);	return 0; }
+DECL_OUT(outle16)
+	{ out_le16(pvt->addr,v&0xffff);	return 0; }
+DECL_OUT(out8)
+	{ out_8(pvt->addr, v&0xff);		return 0; }
+
+DECL_OUT(outm32)
+	{ *(unsigned *)pvt->addr = v;					return 0; }
+DECL_OUT(outm16)
+	{ *(unsigned short *)pvt->addr = v & 0xffff;	return 0; }
+DECL_OUT(outm8)
+	{ *(unsigned char *)pvt->addr = v & 0xff;		return 0; }
+
+static DevBusMappedAccessRec m32   = { inm32, outm32 };
+static DevBusMappedAccessRec be32  = { inbe32, outbe32 };
+static DevBusMappedAccessRec le32  = { inle32, outle32 };
+static DevBusMappedAccessRec m16   = { inm16, outm16 };
+static DevBusMappedAccessRec be16  = { inbe16, outbe16 };
+static DevBusMappedAccessRec le16  = { inle16, outle16 };
+static DevBusMappedAccessRec m8    = { inm8, outm8 };
+static DevBusMappedAccessRec io8   = { in8, out8 };
+static DevBusMappedAccessRec m16s  = { inm16s, outm16 };
+static DevBusMappedAccessRec be16s = { inbe16s, outbe16 };
+static DevBusMappedAccessRec le16s = { inle16s, outle16 };
+static DevBusMappedAccessRec m8s   = { inm8s, outm8 };
+static DevBusMappedAccessRec io8s  = { in8s, out8 };
 
 unsigned long
 devBusVmeLinkInit(DBLINK *l, DevBusMappedPvt pvt, dbCommon *prec)
 {
-char          *sep;
+char          *plus,*comma,*cp;
 unsigned long offset = 0;
 unsigned long rval   = 0;
-char          *cp    = 0;
+char          *base  = 0;
+
+	epicsThreadOnce( &once, myMutexCreate, 0 );
 
 	if ( !pvt ) {
 		assert( pvt = malloc( sizeof(*pvt) ) );
@@ -52,41 +111,57 @@ char          *cp    = 0;
 
     case (VME_IO) :
 
-			cp = malloc(strlen(l->value.vmeio.parm) + 1);
+			base = cp = malloc(strlen(l->value.vmeio.parm) + 1);
 			strcpy(cp,l->value.vmeio.parm);
 
-			if ( (sep=strchr(cp,'+')) ) {
-				*sep++=0;
-				if ( 1!= sscanf(sep,"%li",&offset) ) {
+			if ( (plus=strchr(cp,'+')) ) {
+				*plus++=0;
+				cp = plus;
+			}
+			if ( (comma=strchr(cp,',')) ) {
+				*comma++=0;
+				cp = comma;
+			}
+
+			if ( plus ) {
+				if ( 1!= sscanf(plus,"%li",&offset) ) {
 					recGblRecordError(S_db_badField, (void*)prec,
 									  "devXXBus (init_record) Invalid OFFSET string");
 					break;
 				}
 			}
-			if ( (rval = (unsigned long)registryFind(devBusMappedRegistryId, cp)) ) {
+			if ( 1 == sscanf(base,"%li",&rval) || (rval = (unsigned long)registryFind(devBusMappedRegistryId, base)) ) {
 				rval += l->value.vmeio.card << l->value.vmeio.signal;
 			}
 
-			if ( (sep=strchr(sep,',')) ) {
+			if ( comma ) {
 				void *found;
-				sep++;
-				if ( (found = registryFind(devBusMappedRegistryId, sep)) ) {
+				if ( (found = registryFind(devBusMappedRegistryId, comma)) ) {
 					pvt->acc = found;
 				} else
-				if ( !strcmp(sep,"be32") ) {
+				if ( !strncmp(comma,"m32",3) ) {
+					pvt->acc = &m32;
+				} else
+				if ( !strncmp(comma,"be32",4) ) {
 					pvt->acc = &be32;
 				} else
-				if ( !strcmp(sep,"le32") ) {
+				if ( !strncmp(comma,"le32",4) ) {
 					pvt->acc = &le32;
 				} else
-				if ( !strcmp(sep,"be16") ) {
-					pvt->acc = &be16;
+				if ( !strncmp(comma,"m16",3) ) {
+					pvt->acc = ('s'==comma[3] ? &m16s : &m16);
 				} else
-				if ( !strcmp(sep,"le16") ) {
-					pvt->acc = &le16;
+				if ( !strncmp(comma,"be16",4) ) {
+					pvt->acc = ('s'==comma[4] ? &be16s : &be16);
 				} else
-				if ( !strcmp(sep,"be8") ) {
-					pvt->acc = &io8;
+				if ( !strncmp(comma,"le16",4) ) {
+					pvt->acc = ('s'==comma[4] ? &le16s : &le16);
+				} else
+				if ( !strncmp(comma,"m8",2) ) {
+					pvt->acc = ('s'==comma[2] ? &m8s : &m8);
+				} else
+				if ( !strncmp(comma,"be8",3) ) {
+					pvt->acc = ('s'==comma[3] ? &io8s : &io8);
 				} else {
 					recGblRecordError(S_db_badField, (void*)prec,
 									  "devXXBus (init_record) Invalid ACCESS string");
@@ -99,7 +174,7 @@ char          *cp    = 0;
 		break;
     }
 
-	free(cp);
+	free(base);
 
 	if (rval)
 		rval += offset;

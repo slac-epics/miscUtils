@@ -47,6 +47,7 @@
 #include	"devSup.h"
 #include	"aoRecord.h"
 
+#define DEV_BUS_MAPPED_PVT
 #include	<devBusMapped.h>
 
 /* Create the dset for devAoBus */
@@ -73,27 +74,31 @@ struct {
 
 static long init_record(aoRecord *prec)
 {
+long rval = 0;
 
 	if ( devBusVmeLinkInit(&prec->out, 0, (dbCommon*)prec) ) {
 		recGblRecordError(S_db_badField,(void *)prec,
-			"devAoBus (init_record) Illegal INP field");
+			"devAoBus (init_record) Illegal OUT field");
 		return(S_db_badField);
 	}
 
 
 	if (!prec->pini) {
 		DevBusMappedPvt pvt = prec->dpvt;
-		prec->rval = pvt->acc->rd(pvt);
+		rval = pvt->acc->rd(pvt, &prec->rval, (dbCommon*)prec);
 		recGblResetAlarms(prec);
 	}
 	/* convert */
-    return(0);
+    return(rval);
 }
 
 static long write_ao(aoRecord	*pao)
 {
 DevBusMappedPvt pvt = pao->dpvt;
-	pvt->acc->wr(pvt,pao->rval);
-    return(0);
+long			rval;
+epicsMutexLock(devBusMappedMutex);
+	rval = pvt->acc->wr(pvt,pao->rval, (dbCommon*)pao);
+epicsMutexUnlock(devBusMappedMutex);
+	return rval;
 }
 
