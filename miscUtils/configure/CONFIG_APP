@@ -11,6 +11,7 @@ endif
 
 ifdef T_A
 -include $(TOP)/configure/O.$(T_A)/CONFIG_APP_INCLUDE
+EPICS_SITE_LIB=$(EPICS_SITE)/lib/$(T_A)
 endif
 
 # dbst based database optimization (default: NO)
