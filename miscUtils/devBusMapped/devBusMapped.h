@@ -1,6 +1,6 @@
 #ifndef DEV_BUS_MAPPED_SUPPORT_H
 #define DEV_BUS_MAPPED_SUPPORT_H
-/* $Id: devBusMapped.h,v 1.6 2004/05/03 19:02:52 till Exp $ */
+/* $Id: devBusMapped.h,v 1.7 2005/03/18 02:59:38 till Exp $ */
 
 /* Unified device support for simple, bus-mapped device registers */
 
@@ -74,6 +74,7 @@ typedef struct DevBusMappedDevRec_ {
 								 * with devBusMapped MUST LOCK THIS MUTEX when
                                  * performing modifications or non-atomical reads.
 								 */
+	void          *udata;		/* for use by the driver / user */
 	const char    name[1];		/* space for the terminating NULL; the entire string
 								 * is appended here, however.
 								 */
