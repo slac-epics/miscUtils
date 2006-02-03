@@ -6,6 +6,6 @@
 #MSI=<path>extensions/bin/$(EPICS_HOST_ARCH)/msi
 
 # EPICS_BASE usually appears last so other apps can override stuff:
-EPICS_BASE=/afs/slac/g/spear/4.6.2epics/base
+EPICS_BASE=/afs/slac/g/spear/epics/base
 TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
 INSTALL_LOCATION_APP=$(TOP)/../..

@@ -12,13 +12,13 @@ TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
 
 # If you don't want to install into $(TOP) then
 # define INSTALL_LOCATION_APP here
-INSTALL_LOCATION_APP=/afs/slac/g/spear/4.6.2epics/site
+INSTALL_LOCATION_APP=/afs/slac/g/spear/epics/site
 
 #If using the sequencer, point SNCSEQ at its top directory:
 #SNCSEQ=$(EPICS_BASE)/../modules/soft/seq
 
 # EPICS_BASE usually appears last so other apps can override stuff:
-EPICS_BASE=/afs/slac/g/spear/4.6.2epics/base
+EPICS_BASE=/afs/slac/g/spear/epics/base
 
 #Capfast users may need the following definitions
 #CAPFAST_TEMPLATES=
