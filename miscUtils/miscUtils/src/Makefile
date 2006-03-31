@@ -13,7 +13,13 @@ Com_DIR          = $(EPICS_BASE_LIB)
 
 #=============================
 
-INC = basicIoOps.h
+INC = basicIoOps.h savresUtil.h
+
+LIBRARY_IOC = ssrlMiscUtil
+
+ssrlMiscUtil_SRCS += savres.c
+
+ssrlMiscUtil_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 # xxxRecord.h will be created from xxxRecord.dbd
 #DBDINC += xxxRecord
