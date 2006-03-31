@@ -10,7 +10,7 @@
 
 #include "savresUtil.h"
 
-/* $Id: savres.c,v 1.1 2006/03/31 20:42:53 till Exp $ */
+/* $Id: savres.c,v 1.2 2006/03/31 20:46:18 till Exp $ */
 
 /* Simple tool to read/write array data from/to a file */
 
@@ -233,7 +233,6 @@ char *path = gpath();
 
 	rval = savresRstrData(path, paao->name, paao->bptr, paao->nelm*sizes[paao->ftvl]);
 	if ( rval > 0 ) {
-		paao->nord = rval/sizes[paao->ftvl];
 		paao->udf  = 0;
 		recGblResetAlarms(paao);
 	}
