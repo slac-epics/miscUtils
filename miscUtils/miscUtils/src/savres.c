@@ -10,7 +10,7 @@
 
 #include "savresUtil.h"
 
-/* $Id: savres.c,v 1.2 2006/03/31 20:46:18 till Exp $ */
+/* $Id: savres.c,v 1.3 2006/03/31 20:47:48 till Exp $ */
 
 /* Simple tool to read/write array data from/to a file */
 
@@ -37,8 +37,8 @@
 static aaoRecord *theRec = 0;
 #define epicsMessageQueueId epicsEventId
 #define epicsMessageQueueCreate(nelms, size) epicsEventCreate(0)
-#define epicsMessageQueueSend(q,x,s) do { theRec = x; epicsEventSignal(q); } while (0)
-#define epicsMessageQueueReceive(q, pm, s) do { epicsEventWait(q); *(pm) = theRec; } while (0) 
+#define epicsMessageQueueSend(q,x,s)         do { theRec = *(x); epicsEventSignal(q); } while (0)
+#define epicsMessageQueueReceive(q, pm, s)   do { epicsEventWait(q); *(pm) = theRec;  } while (0) 
 #endif
 #endif
 
@@ -209,7 +209,7 @@ int
 aaoDumpDataAsync(struct aaoRecord *paao)
 {
 int rval;
-	rval = epicsMessageQueueSend( aaoSavResQId, paao, sizeof(paao) );
+	rval = epicsMessageQueueSend( aaoSavResQId, &paao, sizeof(paao) );
 	/* aao doesn't allow for async processing :-(.
 	 * So we just asynchronously write the data out.
 	 */
