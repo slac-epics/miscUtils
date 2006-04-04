@@ -1,6 +1,3 @@
-#ifdef __rtems__
-#undef __STRICT_ANSI__ /* dunno why they enforce -ansi in base/configure/os/CONFIG.Common.RTEMS */
-#endif
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +7,7 @@
 
 #include "savresUtil.h"
 
-/* $Id: savres.c,v 1.3 2006/03/31 20:47:48 till Exp $ */
+/* $Id: savres.c,v 1.4 2006/03/31 21:07:58 till Exp $ */
 
 /* Simple tool to read/write array data from/to a file */
 
@@ -66,16 +63,12 @@ char *s   = mkfnam(path,fnam);
 int  fd   = -1;
 int  put;
 char *rbuf;
-char msgbuf[40];
-
-	msgbuf[sizeof(msgbuf)-1]=0;
 
 	if ( !s )
 		return -1;
 
 	if ( (fd=open(s,O_WRONLY|O_CREAT|O_TRUNC,0777)) < 0 ) {
-		strerror_r(errno, msgbuf, sizeof(msgbuf)-1);
-		errlogPrintf("savresDumpData; unable to open file for writing: %s\n", msgbuf);
+		errlogPrintf("savresDumpData; unable to open file for writing: %s\n", strerror(errno));
 		goto cleanup;
 	}
 	n   *= sizeof(*buf);
@@ -86,8 +79,7 @@ char msgbuf[40];
 	}
 
 	if ( put < 0 ) {
-		strerror_r(errno, msgbuf, sizeof(msgbuf)-1);
-		errlogPrintf("savresDumpData; error writing data: %s\n", msgbuf);
+		errlogPrintf("savresDumpData; error writing data: %s\n", strerror(errno));
 		goto cleanup;
 	}
 
@@ -103,8 +95,7 @@ cleanup:
 		close(fd);
 	if ( rval ) {
 		if ( unlink(s) ) {
-			strerror_r(errno, msgbuf, sizeof(msgbuf)-1);
-			errlogPrintf("savresDumpData; WARNING: unable to remove bogus file: %s\n", msgbuf);
+			errlogPrintf("savresDumpData; WARNING: unable to remove bogus file: %s\n", strerror(errno));
 		}
 	}
 	free(s);
@@ -119,17 +110,12 @@ char *s   = mkfnam(path,fnam);
 int  fd   = -1;
 int  got,i;
 char *rbuf;
-char msgbuf[40];
-
-	msgbuf[sizeof(msgbuf)-1]=0;
-
 
 	if ( !s )
 		return -1;
 
 	if ( (fd=open(s,O_RDONLY)) < 0 ) {
-		strerror_r(errno, msgbuf, sizeof(msgbuf)-1);
-		errlogPrintf("savresRstrData; unable to open file for reading: %s\n", msgbuf);
+		errlogPrintf("savresRstrData; unable to open file for reading: %s\n", strerror(errno));
 		goto cleanup;
 	}
 
@@ -142,8 +128,7 @@ char msgbuf[40];
 	}
 
 	if ( got < 0 ) {
-		strerror_r(errno, msgbuf, sizeof(msgbuf)-1);
-		errlogPrintf("savresRstrData; error reading data: %s\n", msgbuf);
+		errlogPrintf("savresRstrData; error reading data: %s\n", strerror(errno));
 		goto cleanup;
 	}
 
