@@ -7,7 +7,7 @@
 
 #include "savresUtil.h"
 
-/* $Id: savres.c,v 1.4 2006/03/31 21:07:58 till Exp $ */
+/* $Id: savres.c,v 1.5 2006/04/04 03:19:00 spear Exp $ */
 
 /* Simple tool to read/write array data from/to a file */
 
@@ -228,7 +228,7 @@ int
 aaoSavResInit()
 {
 	assert ( aaoSavResQId = epicsMessageQueueCreate(10, sizeof(struct aaoRecord*)) );
-	assert ( epicsThreadCreate("aaoDataDumper", epicsThreadPriorityLow, epicsThreadStackSmall, writer, 0) );
+	assert ( epicsThreadCreate("aaoDataDumper", epicsThreadPriorityLow, epicsThreadGetStackSize(epicsThreadStackSmall), writer, 0) );
 	return 0;
 }
 #endif
