@@ -5,33 +5,18 @@ include $(TOP)/configure/CONFIG
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 #=============================
 
-#USR_CFLAGS += 
+INC += basicIoOps.h
+INC += copyright_SLAC.h
+INC += debugPrint.h
+INC += savresUtil.h
 
-ca_DIR           = $(EPICS_BASE_LIB)
-Com_DIR          = $(EPICS_BASE_LIB)
+LIBRARY_IOC = miscUtils
+DBD         = miscUtils.dbd
 
+LIBSRCS += miscUtils.c
+LIBSRCS += savres.c
 
-#=============================
-
-INC = basicIoOps.h savresUtil.h
-
-LIBRARY_IOC = ssrlMiscUtils
-
-ssrlMiscUtils_SRCS += savres.c
-
-ssrlMiscUtils_LIBS += $(EPICS_BASE_IOC_LIBS)
-
-# xxxRecord.h will be created from xxxRecord.dbd
-#DBDINC += xxxRecord
-
-# <name>.dbd will be created from <name>Include.dbd
-#DBD += example.dbd
-
-#=============================
-
-#PROD_IOC = example
-
-#===========================
+miscUtils_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 include $(TOP)/configure/RULES
 #----------------------------------------
