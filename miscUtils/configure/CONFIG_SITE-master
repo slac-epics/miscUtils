@@ -1,0 +1,4 @@
+# If you don't want to install into $(TOP) then
+# define INSTALL_LOCATION_APP here
+INSTALL_LOCATION_APP=/afs/slac/g/spear/vol4/epics/site
+INSTALL_LOCATION=/afs/slac/g/spear/vol4/epics/site
