@@ -9,4 +9,3 @@
 # module defined in the RELEASE file is rebuilt.
 
 include $(TOP)/configure/RELEASE-master
-include $(TOP)/configure/CONFIG_SITE-master
