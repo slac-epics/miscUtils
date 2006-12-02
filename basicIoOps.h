@@ -1,11 +1,64 @@
 #ifndef TILLS_INPUT_OUTPUT_OPERA_H
 #define TILLS_INPUT_OUTPUT_OPERA_H
 
-/* $Id: basicIoOps.h,v 1.3 2005/03/11 23:31:49 till Exp $ */
+/* $Id: basicIoOps.h,v 1.4 2006-12-02 05:33:15 till Exp $ */
 
 #ifdef __rtems__
 #include <rtems.h>
+#include <stdint.h>
+
+#ifdef __m68k__
+#define iobarrier_r() do {} while (0)
+#define iobarrier_w() do {} while (0)
+#define iobarrier_rw() do {} while (0)
+
+static __inline__ uint8_t in_8(volatile uint8_t *p)
+{ return *p; }
+static __inline__ void    out_8(volatile uint8_t *p, uint8_t val)
+{ *p = val; }
+
+static __inline__ uint16_t in_be16(volatile uint16_t *p)
+{ return *p; }
+static __inline__ uint32_t in_be32(volatile uint32_t *p)
+{ return *p; }
+static __inline__ void out_be16(volatile uint16_t *p, uint16_t v)
+{ *p = v; }
+static __inline__ void out_be32(volatile uint32_t *p, uint32_t v)
+{ *p = v; }
+
+#ifdef __mcf5200__
+static __inline__ uint32_t BYTEREV(uint32_t v)
+{
+	__asm__ __volatile__ ("byterev %0":"+r"(v));
+	return v;
+}
+#else
+#define BYTEREV(v)  \
+		     (((((uint32_t)(v)) & 0xff000000) >> 24) |  \
+		      ((((uint32_t)(v)) & 0x00ff0000) >>  8) |  \
+		      ((((uint32_t)(v)) & 0x0000ff00) <<  8) |  \
+		      ((((uint32_t)(v)) & 0x000000ff) << 24))
+#endif
+
+#define BYTESWAP(x) ((((uint16_t)(x))>>8) | (((uint16_t)(x))<<8))
+
+static __inline__ uint16_t in_le16(volatile uint16_t *p)
+{ uint16_t v = *p; return BYTESWAP(v); }
+static __inline__ uint32_t in_le32(volatile uint32_t *p)
+{ uint32_t v = *p; return BYTEREV(v); }
+
+static __inline__ void out_le16(volatile uint16_t *p, uint16_t v)
+{
+	v = BYTESWAP(v); *p = v;
+}
+static __inline__ void out_le32(volatile uint32_t *p, uint32_t v)
+{
+	v = BYTEREV(v); *p = v;
+}
+
+#else
 #include <libcpu/io.h> /* rtems has these already */
+#endif
 #else
 
 #include <sys/types.h>
