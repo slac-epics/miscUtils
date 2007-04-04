@@ -31,6 +31,10 @@ int mRouteAdd (char * destination, char * gateway, long netmask,
     struct sockaddr_in netmask_in;
     struct sockaddr_in gateway_in;
 
+    if (gateway == 0) {
+      printf ("mRouteAdd: Gateway address not provided\n");
+      return -1;
+    }
     memset (&destination_in, '\0', sizeof destination_in);
     destination_in.sin_len = sizeof destination_in;
     destination_in.sin_family = AF_INET;
@@ -54,7 +58,7 @@ int mRouteAdd (char * destination, char * gateway, long netmask,
               (struct sockaddr *)&gateway_in,
               (struct sockaddr *)&netmask_in,
               flags, 0) < 0) {
-          printf ("Can't add route using gateway %s: %s\n", gateway,
+          printf ("mRouteAdd: Can't add route using gateway %s: %s\n", gateway,
                   strerror (errno));
           return -1;
     }
