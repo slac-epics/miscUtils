@@ -1,20 +1,8 @@
-TOP=../..
-
+TOP = .
 include $(TOP)/configure/CONFIG
-#----------------------------------------
-#  ADD MACRO DEFINITIONS AFTER THIS LINE
-#=============================
-
-INC += basicIoOps.h
-INC += copyright_SLAC.h
-INC += debugPrint.h
-
-LIBRARY_IOC = miscUtils
-DBD         = miscUtils.dbd
-
-LIBSRCS += miscUtils.c
-
-include $(TOP)/configure/RULES
-#----------------------------------------
-#  ADD RULES AFTER THIS LINE
-
+DIRS := $(DIRS) $(filter-out $(DIRS), configure)
+DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *src*))
+DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Src*))
+DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *db*))
+DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Db*))
+include $(TOP)/configure/RULES_DIRS
