@@ -1,4 +1,5 @@
 devBusMapped - Device Support for Accessing Memory-Mapped Registers
+===================================================================
 
 Introduction
 ------------
@@ -74,19 +75,19 @@ channel's block.
 
 The memory map looks like this:
 
-base-> 0: (channel 1)
+base-> 0: (channel 0)
     0x30: CSR1
  ...
- 0x10000: (channel 2)
+ 0x10000: (channel 1)
  0x10030: CSR2
  ...
- 0x20000: (channel 3)
+ 0x20000: (channel 2)
  0x20030: CSR3
  ... etc. ...
 
 
-To address the CSR of the 3rd channel (started enumerating
-at 1, i.e., the device has channels 1..4) you would write
+To address the CSR of channel 2 (started enumerating
+at 0, i.e., the device has channels 0..3) you would write
 
 field(INP, "#C2 S16 @my_device+0x30,<method>")
 
@@ -126,7 +127,7 @@ may control the device speed (00 off, 10 low, 01 hi).
 The device shall be a PCI device (-> little-endian) with
 32-bit registers:
 
-record(bi, <name>)
+record(bi, XX_STAT)
 {
 field(DTYP,"Bus Address")
 field(INP, "#C2S16@my_device+0x30,le32")
@@ -136,7 +137,7 @@ field(ONAM,"BLAH_BAD")
 field(ZSV, "MAJOR")
 }
 
-record(mbbo,<name>)
+record(mbbo,YY_SPEED)
 {
 field(DTYP, "Bus Address")
 field(OUT,  "#C2S16@my_device+0x30,le32")
@@ -175,6 +176,40 @@ base address if it is static and known outside of the
 run-time environment. A integer number (usual C-style
 '0x' or '0' prefixes allowed) may be used in the
 link field instead of a symbolic name.
+
+Example with Memory Variable
+- - - - - - - - - - - - - - -
+Sometimes you want to attach an EPICS record to a normal
+'C-code' variable for monitoring or control. This is where
+the 'm' methods come in. They always use native endianness
+which is appropriate for this kind of data.
+Let's say you want to be able to control a 'debug' variable
+through an EPICS record. The value of the 'debug' variable
+ranges from 0 to 2 (debugging messages off,  few messages,
+verbose messages).
+
+Your code already looks like this
+
+static char debug = 0;
+
+     ...
+     if ( debug > 1 )
+        printf("My verbose message\n");
+     ...
+
+Simply add a line somewhere during initialization:
+
+    devBusMappedRegister("var1",&debug);
+
+And add a record to the EPICS db:
+
+    record(longout,"DEBUG") {
+      field(DTYP, "BusAddress")
+      field(OUT,  "#C0S0@var1,m8")
+    }
+
+That's it -- now you are able to control the amount of
+messages printed via EPICS.
 
 Adding devBusMapped Support to an IOC Application
 - - - - - - - - - - - - - - - - - - - - - - - - -
