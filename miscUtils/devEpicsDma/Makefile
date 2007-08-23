@@ -44,10 +44,14 @@ SRC_DIRS += $(GTRSUP)/vtr812
 VME_ONLY_SRCS += drvVtr812.c
 DBD += drvVtr812.dbd
 
+SRC_DIRS += $(GTRSUP)/ecdrgcadc
+VME_ONLY_SRCS += drvEcdrgcadc.c
+DBD += drvEcdrgcadc.dbd
 
 
-SRCS_RTEMS-mvme2100 += $(VME_ONLY_SRCS)
-SRCS_RTEMS-mvme5500 += $(VME_ONLY_SRCS)
+#SRCS_RTEMS-mvme2100 += $(VME_ONLY_SRCS)
+#SRCS_RTEMS-mvme5500 += $(VME_ONLY_SRCS)
+SRCS_RTEMS          += $(VME_ONLY_SRCS)
 SRCS_vxWorks        += $(VME_ONLY_SRCS)
 SRCS += $(SRCS_$(T_A))
 
