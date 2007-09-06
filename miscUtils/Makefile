@@ -7,12 +7,16 @@ DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Utils))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard drv*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard dev*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Lib))
-DIRS += seq ipac gtr asyn ether_ip restore motor timestampRecord
+DIRS += seq ipac gtr asyn ether_ip restore motor sSubRecord
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
 #DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Gpib))
 # xycomIpac first since it installs xipIo.h used by acromagIpac.
 DIRS += xycomIpac
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Ipac))
 #DIRS += Hy8002 Hy8401
+DIRS += CaenADCV965
+# genSub and sscan before std and calc, calc before optics 
+DIRS += genSub sscan
+DIRS += std calc optics
 
 include $(TOP)/configure/RULES_TOP
