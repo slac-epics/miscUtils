@@ -14,7 +14,7 @@ DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
 DIRS += xycomIpac
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Ipac))
 #DIRS += Hy8002 Hy8401
-DIRS += CaenADCV965
+DIRS += CaenADCV965 ssi
 # genSub and sscan before std and calc, calc before optics 
 DIRS += genSub sscan
 DIRS += std calc optics
