@@ -7,7 +7,7 @@ DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Utils))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard drv*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard dev*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Lib))
-DIRS += seq ipac gtr asyn ether_ip restore motor sSubRecord
+DIRS += seq ipac gtr asyn ether_ip restore motor sSubRecord iocAdmin
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
 #DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Gpib))
 # xycomIpac first since it installs xipIo.h used by acromagIpac.
