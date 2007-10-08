@@ -11,13 +11,14 @@
 #  Mod:
 #        08-Oct-2007, K. Luchini         (LUCHINI):
 #          release seq-R1-0-1
+#        26-Sep-2007, E. Williams        (ERNEST):
 #
 #==============================================================
 #
-seq-R1-0-1: Retag using LCLS standard.
-            add RELEASE_NOTES file.
-            Built against base-R3-14-8-2-lcls2 (RTEMS 4.7.1)
+miscUtils-R1-0-1: Retag using LCLS standard.
+                  add RELEASE_NOTES file.
+                  Built against base-R3-14-8-2-lcls2 (RTEMS 4.7.1)
 
-seq-R1-0-0: Retag using LCLS standard. 
-            add header to this file.
-            Built against base-R3-14-8-2-lcls1 (RTEMS 4.7)
+miscUtils-R1-0-0: Retag using LCLS standard. 
+                  add header to this file.
+                  Built against base-R3-14-8-2-lcls1 (RTEMS 4.7)
