@@ -15,8 +15,9 @@ DIRS += xycomIpac
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Ipac))
 #DIRS += Hy8002 Hy8401
 DIRS += CaenADCV965 ssi
-# genSub and sscan before std and calc, calc before optics 
+# genSub and sscan before std and calc, calc before optics and stream
 DIRS += genSub sscan
-DIRS += std calc optics
+DIRS += std calc
+DIRS += optics stream
 
 include $(TOP)/configure/RULES_TOP
