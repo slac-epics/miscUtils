@@ -1,9 +1,0 @@
-#RELEASE Location of external products
-# Run "gnumake clean uninstall install" in the application
-# top directory each time this file is changed.
-
-# EPICS_BASE usually appears last so other apps can override stuff:
-#EPICS_BASE=/afs/slac/g/spear/epics/base
-#INSTALL_LOCATION_APP=$(TOP)/../..
-include $(TOP)/../../configure/RELEASE-master
-include $(TOP)/../../configure/CONFIG_SITE-master
