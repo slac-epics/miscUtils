@@ -19,5 +19,6 @@ DIRS += CaenADCV965 ssi
 DIRS += genSub sscan
 DIRS += std calc
 DIRS += optics stream
+DIRS += snmp
 
 include $(TOP)/configure/RULES_TOP
