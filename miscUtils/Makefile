@@ -23,7 +23,7 @@ DIRS += SRSdg535Gpib
 # xycomIpac first since it installs xipIo.h used by acromagIpac.
 DIRS += xycomIpac
 DIRS += acromagIpac
-DIRS += CaenADCV965 ssi
+DIRS += caenADCV965 CaenADCV965_8 ssi
 # genSub and sscan before std and calc, calc before optics and stream
 DIRS += genSub sscan
 DIRS += std calc
