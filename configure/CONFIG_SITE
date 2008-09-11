@@ -13,6 +13,10 @@
 # that Base is built for.
 #CROSS_COMPILER_TARGET_ARCHS = vxWorks-68040
 
+# Build for RTEMS only. Not relevant to vxWorks
+CROSS_COMPILER_TARGET_ARCHS = RTEMS-beatnik RTEMS-mvme3100 RTEMS-uC5282
+
+
 # Set this when your IOC and the host use different paths
 # to access the application. This will be needed to boot
 # from a Microsoft FTP server or with some NFS mounts.
