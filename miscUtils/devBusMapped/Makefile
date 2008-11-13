@@ -4,6 +4,7 @@ TOP=../..
 endif
 
 include $(TOP)/configure/CONFIG
+CROSS_COMPILER_TARGET_ARCHS = RTEMS-beatnik RTEMS-svgm
 #----------------------------------------
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 #=============================
