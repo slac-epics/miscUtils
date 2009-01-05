@@ -42,10 +42,6 @@ DIRS += SRSdg535Gpib
 #DIRS += Hp3324Gpib
 #DIRS += Hp8664Gpib
 #DIRS += K2701Gpib
-# xycomIpac first since it installs xipIo.h used by acromagIpac.
-DIRS += xycomIpac
-DIRS += acromagIpac
-DIRS += caenADCV965 CaenADCV965_8 ssi
 # genSub and sscan before std and calc, calc before optics
 DIRS += genSub sscan
 DIRS += std calc
