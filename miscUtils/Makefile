@@ -32,7 +32,7 @@ DIRS += optics stream
 DIRS += snmp
 else
 # for solaris and vxWorks, build only a subset of site
-DIRS += seq ipac asyn ether_ip restore sSubRecord iocAdmin
+DIRS += seq asyn ether_ip restore sSubRecord iocAdmin
 DIRS += Hp53181AGpib
 DIRS += Hp5385Gpib
 DIRS += K2001Gpib
