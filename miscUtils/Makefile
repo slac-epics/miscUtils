@@ -45,7 +45,7 @@ DIRS += SRSdg535Gpib
 # genSub and sscan before std and calc, calc before optics
 DIRS += genSub sscan
 DIRS += std calc
-DIRS += optics
+DIRS += optics stream
 DIRS += epvxi
 endif
 
