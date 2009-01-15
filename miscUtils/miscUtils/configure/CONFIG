@@ -3,6 +3,9 @@ include $(TOP)/configure/CONFIG_APP
 # Add any changes to make definitions here
 
 #CROSS_COMPILER_TARGET_ARCHS = vxWorks-68040
+ifeq ($(EPICS_HOST_ARCH),solaris-sparc-gnu)
+CROSS_COMPILER_TARGET_ARCHS =
+endif
 
 # Use this when your IOC and the host use different paths
 # to access the application. Typically this will be 
