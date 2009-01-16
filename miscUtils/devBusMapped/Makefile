@@ -4,7 +4,9 @@ TOP=../..
 endif
 
 include $(TOP)/configure/CONFIG
-CROSS_COMPILER_TARGET_ARCHS = RTEMS-beatnik RTEMS-svgm
+ifeq ($(EPICS_HOST_ARCH),solaris-sparc-gnu)
+CROSS_COMPILER_TARGET_ARCHS = 
+endif
 #----------------------------------------
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 #=============================
