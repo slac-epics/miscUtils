@@ -7,7 +7,9 @@
 
 #include "savresUtil.h"
 
-/* $Id: savres.c,v 1.5 2006/04/04 03:19:00 spear Exp $ */
+#include "dbAccess.h"
+
+/* $Id: savres.c,v 1.6 2006-04-19 08:52:17 till Exp $ */
 
 /* Simple tool to read/write array data from/to a file */
 
@@ -231,6 +233,110 @@ aaoSavResInit()
 	assert ( epicsThreadCreate("aaoDataDumper", epicsThreadPriorityLow, epicsThreadGetStackSize(epicsThreadStackSmall), writer, 0) );
 	return 0;
 }
+
+static long
+link_helper(DBLINK *l, void *prec, int imax)
+{
+long c;
+
+	if ( VME_IO != l->type ) {
+		recGblRecordError(S_db_badField, (void*)prec, "(link_helper) Illegal OUT field (not VME_IO)");
+		return -1;
+	}
+	if ( (c=l->value.vmeio.card) >= imax) {
+		recGblRecordError(S_db_badField, (void*)prec, "(link_helper) card # too high");
+		return -1;
+	}
+	return c;
+}
+
+long
+savres_aao_init_record_helper(struct aaoRecord *paao, float *buf, int nelm, int ninst, int dim)
+{
+unsigned i,s;
+
+	paao->ftvl = DBR_FLOAT;
+	paao->nelm = nelm;
+
+	if ( paao->bptr ) {
+		recGblRecordError(S_db_badField, (void*)paao, "(savres_aao_init_record_helper) record already connected (database error)");
+		return -1;
+	}
+
+	if ( (s=paao->out.value.vmeio.signal) >= ninst) {
+		recGblRecordError(S_db_badField, (void*)paao, "(savres_aao_init_record_helper) signal # too high");
+		return -1;
+	}
+
+	if ( buf ) {
+		paao->bptr = buf + s*dim;
+	} else if ( !(paao->bptr = malloc(sizeof(float) * dim) ) ) {
+		recGblRecordError(
+			S_db_noMemory, (void*)paao, "devAaoFdbk: No memory");
+		paao->pact = 1;
+		return -1;
+	}
+
+	for ( i = 0; i<dim; i++ ) {
+		((float*)paao->bptr)[i] = (float)0.;
+	}
+	paao->val  = paao->bptr;
+	/* use 'dpvt' to cache 'nelm' -- the aao record resets nelm
+	 * if the record is written with an array < the original value
+	 */
+
+	paao->dpvt = (void*) (paao->nord = paao->nelm);
+
+    return(0);
+}
+
+
+long
+savres_aao_init_record(struct aaoRecord *paao, SavresArrayIniDesc d, int dsz)
+{
+long rval;
+int   c = link_helper( &paao->out, paao, dsz );
+char *p;
+
+	if ( c < 0 )
+		return S_db_badField;
+
+
+	rval = savres_aao_init_record_helper(paao, d[c].arr, d[c].nelm, d[c].ninst, d[c].dim);
+
+	p =  paao->out.value.vmeio.parm;
+
+	if ( !rval && ( !p || !strstr(p, "norest")) )
+		aaoRstrData(paao);
+
+	return rval;
+}
+
+static long
+write_aao_pad(aaoRecord *paao)
+{
+int i;
+	/* pad excess elements with zeroes */
+	for ( i = paao->nelm; i < (unsigned)paao->dpvt; i++ ) {
+		((float*)paao->bptr)[i] = (float) 0.;
+	}
+	paao->nord = paao->nelm;
+	paao->nelm = (unsigned)paao->dpvt;
+	return 0;
+}
+
+long
+savres_aao_write(aaoRecord *paao)
+{
+long rval = write_aao_pad(paao);
+char *p   = paao->out.value.vmeio.parm;
+
+	if ( !rval && ( !p || !strstr(p,"norest")) )
+		aaoDumpDataAsync(paao);
+
+	return rval;
+}
+
 #endif
 
 #ifdef TESTING

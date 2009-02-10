@@ -80,6 +80,43 @@ aaoRstrData(struct aaoRecord *paao);
 int 
 aaoSavResInit();
 
+/* Data structure for attaching aao records to
+ * in-memory buffers.
+ */
+typedef struct SavresArrayIniDescRec_ {
+	float *arr;	   /* storage area to use and attach to BPTR;
+                    * malloced if NULL
+                    */
+	int   ninst;   /* max. # of instances of 'similar' records;
+                    * the 'instance' is chosen based on the 'signal'
+                    * number of the aao's INP field:
+                    * 
+                    * aao->bptr = arr + <signal> * dim;
+                    *
+                    * Only relevant if a common storage area
+                    * is to be accessed (arr not NULL but
+                    * pointing to a multi-dimensional array:
+                    *   float arr[NINST][DIM];
+                    */
+	int   dim;     /* dimension of 'arr'; if arr==NULL 'dim' floats
+                    * are allocated.
+                    */
+	int   nelm;    /* number of elements in the aao record.
+                    * This is usually equal to 'dim' but may
+                    * be less e.g., if 'dim' is chosen so that
+                    * special alignment requirements are met.
+                    */
+} SavresArrayIniDescRec, *SavresArrayIniDesc;
+
+long
+savres_aao_init_record_helper(struct aaoRecord *paao, float *buf, int nelm, int ninst, int dim);
+
+long
+savres_aao_init_record(struct aaoRecord *paao, SavresArrayIniDesc d, int dsz);
+
+long
+savres_aao_write(aaoRecord *paao);
+
 #ifdef __cplusplus
 };
 #endif
