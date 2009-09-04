@@ -30,6 +30,7 @@ DIRS += genSub sscan
 DIRS += std calc
 DIRS += optics stream
 DIRS += snmp
+DIRS += event
 else
 # for solaris and vxWorks, build only a subset of site
 DIRS += seq asyn ether_ip restore sSubRecord iocAdmin
