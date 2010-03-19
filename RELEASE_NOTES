@@ -9,6 +9,8 @@
 #  Rev:  dd-mmm-yyyy, Reviewer's Name    (USERNAME)
 #--------------------------------------------------------------
 #  Mod:
+#        19-Mar-2010, S. Hoobler         (SONYA):
+#          release miscUtils-R2-2-0
 #        23-Feb-2010, K. Luchini         (LUCHINI):
 #          release miscUtils-R2-1-0
 #        21-Feb-2010  Z. SZalaata        (ZMS):
@@ -20,6 +22,8 @@
 #
 #==============================================================
 #
+miscUtils-R2-2-0:  Build againt base-R3-14-8-2-lcls6 and RTEMS-4.9.4
+
 miscUtils-R2-1-0:  Build againt base-R3-14-8-2 and RTEMS-4.9.3
 
 miscUtils-R2-0-0:  Build againt base-R3-14-8-2 and RTEMS-4.9.1
