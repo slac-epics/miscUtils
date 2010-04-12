@@ -1,6 +1,6 @@
 #ifndef DEV_BUS_MAPPED_SUPPORT_H
 #define DEV_BUS_MAPPED_SUPPORT_H
-/* $Id: devBusMapped.h,v 1.7 2005/03/18 02:59:38 till Exp $ */
+/* $Id: devBusMapped.h,v 1.8 2005-05-04 21:21:44 till Exp $ */
 
 /* Unified device support for simple, bus-mapped device registers */
 
@@ -38,11 +38,17 @@
  */
 
 #include <dbCommon.h>
+/* Due to EPICS inconsistency an application cannot include
+ * both, cadef.h and dbAccess.h (otherwise there will be double
+ * defined CPP symbols).
+ * Hence we avoid including any of these from here!
 #include <dbAccess.h>
+ */
 #include <dbScan.h>
 #include <recGbl.h>
 #include <epicsMutex.h>
-
+#include <epicsTypes.h>
+#include <link.h>
 
 typedef struct DevBusMappedPvtRec_ *DevBusMappedPvt;
 typedef struct DevBusMappedAccessRec_ *DevBusMappedAccess;
@@ -50,8 +56,8 @@ typedef struct DevBusMappedAccessRec_ *DevBusMappedAccess;
 /* Read and write methods which are used by the device support 'read' and 'write'
  * routines.
  */
-typedef int (*DevBusMappedRead)(DevBusMappedPvt pvt, unsigned *pvalue, dbCommon *prec);
-typedef int (*DevBusMappedWrite)(DevBusMappedPvt pvt, unsigned value, dbCommon *prec);
+typedef int (*DevBusMappedRead)(DevBusMappedPvt pvt, epicsUInt32 *pvalue, dbCommon *prec);
+typedef int (*DevBusMappedWrite)(DevBusMappedPvt pvt, epicsUInt32 value, dbCommon *prec);
 
 typedef struct DevBusMappedAccessRec_ {
 	DevBusMappedRead	rd;		/* read access routine				 */
@@ -62,10 +68,10 @@ typedef struct DevBusMappedAccessRec_ {
  * fails.
  */
 int
-devBusMappedGetVal(DevBusMappedPvt pvt, unsigned *pvalue, dbCommon *prec);
+devBusMappedGetVal(DevBusMappedPvt pvt, epicsUInt32 *pvalue, dbCommon *prec);
 
 int
-devBusMappedPutVal(DevBusMappedPvt pvt, unsigned value, dbCommon *prec);
+devBusMappedPutVal(DevBusMappedPvt pvt, epicsUInt32 value, dbCommon *prec);
 
 /* "per-device" information kept in the registry */
 typedef struct DevBusMappedDevRec_ {
