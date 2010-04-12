@@ -8,7 +8,7 @@ DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Utils))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard drv*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard dev*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Lib))
-DIRS += seq ipac gtr asyn ether_ip restore motor sSubRecord iocAdmin
+DIRS += seq ipac gtr asyn ether_ip restore sSubRecord iocAdmin
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
 # Not all Gpib in the repository has been converted to asyn yet.
 # Just these:
