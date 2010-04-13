@@ -8,7 +8,7 @@ DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Utils))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard drv*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard dev*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Lib))
-DIRS += seq ipac gtr asyn ether_ip restore sSubRecord iocAdmin
+DIRS += seq ipac gtr ether_ip restore sSubRecord iocAdmin
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
 # Not all Gpib in the repository has been converted to asyn yet.
 # Just these:
@@ -29,11 +29,10 @@ DIRS += caenADCV965 CaenADCV965_8 ssi
 DIRS += genSub sscan
 DIRS += std calc
 DIRS += optics stream
-DIRS += snmp
 DIRS += event
 else
 # for solaris and vxWorks, build only a subset of site
-DIRS += seq asyn ether_ip restore sSubRecord iocAdmin
+DIRS += seq ether_ip restore sSubRecord iocAdmin
 DIRS += miscUtils
 DIRS += devBusMapped
 DIRS += Hp53181AGpib
