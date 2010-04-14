@@ -40,4 +40,4 @@ include $(TOP)/configure/RULES
 #  ADD RULES AFTER THIS LINE
 
 #suppress non-strict warnings
-CMPLR = ANSI
+CMPLR = XXX
