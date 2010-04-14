@@ -265,7 +265,7 @@ int rval = pvt->acc->wr(pvt, value, prec);
  * freshly allocated 'DevBusMappedDev' struct or NULL on failure.
  */
 DevBusMappedDev
-devBusMappedRegister(char *name, volatile void * baseAddress)
+devBusMappedRegister(const char *name, volatile void * baseAddress)
 {
 DevBusMappedDev	rval = 0, d;
 
@@ -295,7 +295,7 @@ DevBusMappedDev	rval = 0, d;
 }
 
 int
-devBusMappedRegisterIO(char *name, DevBusMappedAccess acc)
+devBusMappedRegisterIO(const char *name, DevBusMappedAccess acc)
 {
 char *n;
 
@@ -309,7 +309,7 @@ char *n;
 }
 
 int
-devBusMappedRegisterIOScan(char *name, IOSCANPVT scan)
+devBusMappedRegisterIOScan(const char *name, IOSCANPVT scan)
 {
 char *n;
 
@@ -324,7 +324,7 @@ char *n;
 
 /* Find the 'devBusMappedDev' of a registered device by name */
 DevBusMappedDev
-devBusMappedFind(char *name)
+devBusMappedFind(const char *name)
 {
 	return registryFind(registryId, name);
 }

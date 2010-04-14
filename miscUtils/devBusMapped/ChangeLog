@@ -1,3 +1,8 @@
+	20100414 (T.S.):
+
+	* devBusMapped.h, devBusMapped.c: Added 'const' attribute to 'name'
+	parameter passed to 'xxxRegister()' and 'devBusMappedFind()'.
+
 	20100412 (T.S.):
 
 	* devBusMapped.h: Removed inclusion of dbAccess.h. This caused conflicts

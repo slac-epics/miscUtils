@@ -1,6 +1,6 @@
 #ifndef DEV_BUS_MAPPED_SUPPORT_H
 #define DEV_BUS_MAPPED_SUPPORT_H
-/* $Id: devBusMapped.h,v 1.8 2005-05-04 21:21:44 till Exp $ */
+/* $Id: devBusMapped.h,v 1.9 2010/04/12 17:55:56 strauman Exp $ */
 
 /* Unified device support for simple, bus-mapped device registers */
 
@@ -128,19 +128,19 @@ devBusVmeLinkInit(DBLINK *l, DevBusMappedPvt pvt, dbCommon *prec);
  * prior to submitting them to this routine.
  */
 DevBusMappedDev
-devBusMappedRegister(char *name, volatile void * baseAddress);
+devBusMappedRegister(const char *name, volatile void * baseAddress);
 
 /* Register an IO access method; returns 0 on success, nonzero on failure */
 int
-devBusMappedRegisterIO(char *name, DevBusMappedAccess accessMethods);
+devBusMappedRegisterIO(const char *name, DevBusMappedAccess accessMethods);
 
 /* Register an IO Intr scan list; returns 0 on success, nonzero on failure */
 int
-devBusMappedRegisterIOScan(char *name, IOSCANPVT scan);
+devBusMappedRegisterIOScan(const char *name, IOSCANPVT scan);
 
 /* Find the 'devBusMappedDev' of a registered device by name */
 DevBusMappedDev
-devBusMappedFind(char *name);
+devBusMappedFind(const char *name);
 
 /* Helper to retrieve the 'scan' (IOSCANPVT) field of a DevBusMappedPvtRec
  * attached to a record's DPVT field.
