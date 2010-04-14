@@ -1,3 +1,31 @@
 	20100412 (T.S.):
 
-	*ChangeLog: added.
+	* devBusMapped.h: Removed inclusion of dbAccess.h. This caused conflicts
+	in applications which already would include cadef.h. EPICS apparently
+	defines the same CPP symbols (DBF_xxx) in multiple headers :-(.
+	Include link.h. instead.
+
+	20100412 (T.S.):
+
+	* devBusMapped.c: BUGFIX: parse constant link into pointer
+	value rather than using recGblInitConstantLink() (which would
+	yield truncated pointer on 64-bit platform).
+
+	Use stdint types rather than guessing width of 'int', 'short int' etc;
+	use 'uintptr_t' instead of unsigned long.
+
+	20100412 (T.S.):
+
+	* devAoBus.c: BUGFIX: removed extra ';' which resulted in an
+	alarm being raised if 'pini=no'.
+
+	20100412 (T.S.):
+
+	* devAiBus.c, devAoBus.c, devBiBus.c, devBoBus.c, devLiBus.c, devLoBus.c,
+	devMbbiBus.c, devMbboBus.c, devBusMapped.c, devBusMapped.h: 
+	devBusMappedGetValue/devBusMappedPutValue (and low-level access methods)
+	now pass epicsUInt32 instead of 'unsigned'.
+
+	20100412 (T.S.):
+
+	* ChangeLog: added.
