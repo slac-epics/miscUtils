@@ -301,7 +301,7 @@ char *n;
 
 	/* EPICS registry doesn't copy the name string, so we do */
 	if ( 0 == (n=malloc(strlen(name)+1)) )
-		return 0;
+		return -1;
 
 	strcpy(n,name);
 
@@ -315,7 +315,7 @@ char *n;
 
 	/* EPICS registry doesn't copy the name string, so we do */
 	if ( 0 == (n=malloc(strlen(name)+1)) )
-		return 0;
+		return -1;
 
 	strcpy(n,name);
 

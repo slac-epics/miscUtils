@@ -1,9 +1,18 @@
+	20100415 (T.S.):
+
+	* devBusMapped.c: FIXED wrong return value of devBusMappedRegisterIO,
+	devBusMappedRegisterIOScan in case of there not being enough memory.
+	(This is not a critical fix since the failure scenario is unlikely
+	and it is especially unlikely that anything will work w/o enough
+	memory.)
+
 	20100414 (T.S.):
 
 	* Makefile: set CMPLR to 'XXX'. There seems no way to use another
 	standard other than ANSI or K&R (such as C99). By setting CMPLR
 	to some unknown value we let the compiler use it's default.
-	It would be possible to set CONFORM_CFLAGS_ANSI or CONFORM_CFLAGS_STRICT	but the flags passed there would be compiler specific and therefore
+	It would be possible to set CONFORM_CFLAGS_ANSI or CONFORM_CFLAGS_STRICT
+	but the flags passed there would be compiler specific and therefore
 	we didn't choose that method.
 
 	20100414 (T.S.):
