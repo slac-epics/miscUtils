@@ -1,5 +1,17 @@
 	20100420 (T.S.):
 
+	* devAoBus.c: *** FEATURE CHANGE ***
+
+	Let init_record return '2' (no convert) instead of (0). This 
+	lets the record use the initial VAL or DOL (if set), respectively
+	if PINI=YES. (The current and previous behavior reads 'RVAL'
+	from the hardware and converts to VAL if PINI=NO.)
+
+	Previously, if PINI=YES the user would have to specify an initial
+	RVAL (while VAL/DOL being ignored).
+
+	20100420 (T.S.):
+
 	* devBusMapped.h: Added 'extern "C"' linkage declaration for c++
 
 	20100415 (T.S.):

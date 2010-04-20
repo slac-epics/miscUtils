@@ -92,8 +92,14 @@ epicsUInt32 v;
 			recGblSetSevr( prec, READ_ALARM, INVALID_ALARM );
 		prec->rval = (epicsInt32)v;
 		recGblResetAlarms(prec);
+		/* convert */
+	} else {
+		/* If they want pini then they want to define an intial VAL.
+		 * However, the aoRecord code will use the initial RVAL 
+		 * unless we tell it NOT to convert!
+		 */
+		rval = 2;
 	}
-	/* convert */
     return(rval);
 }
 
