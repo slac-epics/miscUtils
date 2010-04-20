@@ -1,6 +1,6 @@
 #ifndef DEV_BUS_MAPPED_SUPPORT_H
 #define DEV_BUS_MAPPED_SUPPORT_H
-/* $Id: devBusMapped.h,v 1.9 2010/04/12 17:55:56 strauman Exp $ */
+/* $Id: devBusMapped.h,v 1.10 2010/04/14 13:59:21 strauman Exp $ */
 
 /* Unified device support for simple, bus-mapped device registers */
 
@@ -49,6 +49,10 @@
 #include <epicsMutex.h>
 #include <epicsTypes.h>
 #include <link.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct DevBusMappedPvtRec_ *DevBusMappedPvt;
 typedef struct DevBusMappedAccessRec_ *DevBusMappedAccess;
@@ -147,4 +151,9 @@ devBusMappedFind(const char *name);
  */
 long
 devBusMappedGetIointInfo(int delFrom, dbCommon *prec, IOSCANPVT *ppvt);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

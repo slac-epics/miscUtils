@@ -1,3 +1,7 @@
+	20100420 (T.S.):
+
+	* devBusMapped.h: Added 'extern "C"' linkage declaration for c++
+
 	20100415 (T.S.):
 
 	* devBusMapped.c: FIXED wrong return value of devBusMappedRegisterIO,
