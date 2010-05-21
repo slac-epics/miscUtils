@@ -1,4 +1,4 @@
-# Makefile at top of ipac support tree
+# Makefile at top of site support tree
 # Makefile,v 1.3 1999/03/09 20:28:34 anj Exp
 TOP = ..
 include $(TOP)/configure/CONFIG
@@ -8,7 +8,7 @@ DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Utils))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard drv*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard dev*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Lib))
-DIRS += seq ipac gtr ether_ip restore sSubRecord iocAdmin
+DIRS += seq gtr ether_ip restore sSubRecord iocAdmin
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
 # Not all Gpib in the repository has been converted to asyn yet.
 # Just these:
