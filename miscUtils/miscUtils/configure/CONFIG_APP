@@ -8,6 +8,8 @@ include $(TOP)/configure/RELEASE
 CONFIG=$(EPICS_BASE)/configure
 include $(CONFIG)/CONFIG
 
+include $(TOP)/../../configure/CONFIG_SITE-master
+
 INSTALL_LOCATION = $(TOP)
 ifdef INSTALL_LOCATION_APP
 INSTALL_LOCATION = $(INSTALL_LOCATION_APP)

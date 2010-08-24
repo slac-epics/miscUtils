@@ -6,4 +6,3 @@
 #EPICS_BASE=/afs/slac/g/spear/epics/base
 #INSTALL_LOCATION_APP=$(TOP)/../..
 include $(TOP)/../../configure/RELEASE-master
-include $(TOP)/../../configure/CONFIG_SITE-master
