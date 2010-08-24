@@ -9,7 +9,7 @@
 
 #include "dbAccess.h"
 
-/* $Id: savres.c,v 1.6 2006-04-19 08:52:17 till Exp $ */
+/* $Id: savres.c,v 1.7 2009/02/10 19:26:02 till Exp $ */
 
 /* Simple tool to read/write array data from/to a file */
 
@@ -28,6 +28,7 @@
 #include <recSup.h>
 #include <recGbl.h>
 #include <assert.h>
+#include <errlog.h>
 #ifdef HAS_MSGQ
 #include <epicsMessageQueue.h>
 #else
