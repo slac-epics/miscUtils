@@ -10,3 +10,4 @@ endif
 
 MSI=$(EPICS_BASE)/../extensions/bin/$(EPICS_HOST_ARCH)/msi
 
+CONFIG_INSTALLS = ../RULES_BUILD
