@@ -26,7 +26,7 @@ DIRS += caenADCV965 CaenADCV965_8 ssi
 # sscan before std and calc, calc before optics and stream
 DIRS += sscan
 DIRS += std calc
-DIRS += optics stream
+DIRS += optics
 DIRS += event
 else
 # for solaris and vxWorks, build only a subset of site
@@ -45,7 +45,7 @@ DIRS += SRSdg535Gpib
 # sscan before std and calc, calc before optics
 DIRS += sscan
 DIRS += std calc
-DIRS += optics stream
+DIRS += optics
 DIRS += epvxi
 endif
 
