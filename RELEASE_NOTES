@@ -22,7 +22,7 @@
 #
 #==============================================================
 #
-miscUtils-R2-2-1:  Modify RELEASE_SITE to use base-R3-14-8-2-lcls6-p1
+miscUtils-R2-2-1:  Modify RELEASE_SITE to use base-R3-14-8-2-lcls6_p1
 
 miscUtils-R2-2-0:  Build againt base-R3-14-8-2-lcls6 and RTEMS-4.9.4
 
