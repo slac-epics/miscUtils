@@ -9,7 +9,7 @@
 
 #include "dbAccess.h"
 
-/* $Id: savres.c,v 1.7 2009/02/10 19:26:02 till Exp $ */
+/* $Id: savres.c,v 1.8 2010/08/24 17:33:58 saa Exp $ */
 
 /* Simple tool to read/write array data from/to a file */
 
@@ -286,7 +286,7 @@ unsigned i,s;
 	 * if the record is written with an array < the original value
 	 */
 
-	paao->dpvt = (void*) (paao->nord = paao->nelm);
+	paao->dpvt = (void*) (long)(paao->nord = paao->nelm);
 
     return(0);
 }
@@ -318,11 +318,11 @@ write_aao_pad(aaoRecord *paao)
 {
 int i;
 	/* pad excess elements with zeroes */
-	for ( i = paao->nelm; i < (unsigned)paao->dpvt; i++ ) {
+	for ( i = paao->nelm; i < (long)paao->dpvt; i++ ) {
 		((float*)paao->bptr)[i] = (float) 0.;
 	}
 	paao->nord = paao->nelm;
-	paao->nelm = (unsigned)paao->dpvt;
+	paao->nelm = (long)paao->dpvt;
 	return 0;
 }
 
