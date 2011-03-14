@@ -7,9 +7,10 @@
 # "gnumake clean uninstall install" in the top directory
 # each time EPICS_BASE, SNCSEQ, or any other external
 # module defined in the RELEASE file is rebuilt.
-include $(TOP)/RELEASE_SITE
+#include $(TOP)/RELEASE_SITE
+include $(TOP)/../../configure/RELEASE-master
 
-TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
+#TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
 
 # If you don't want to install into $(TOP) then
 # define INSTALL_LOCATION_APP here
@@ -17,10 +18,10 @@ TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
 
 #If using the sequencer, point SNCSEQ at its top directory:
 #SNCSEQ=$(EPICS_BASE)/../modules/soft/seq
-BASE_MODULE_VERSION=base-R3-14-8-2-lcls6
+#BASE_MODULE_VERSION=base-R3-14-8-2-lcls6
 
 # EPICS_BASE usually appears last so other apps can override stuff:
-EPICS_BASE=$(EPICS_SITE_TOP)/base/$(BASE_MODULE_VERSION)
+#EPICS_BASE=$(EPICS_SITE_TOP)/base/$(BASE_MODULE_VERSION)
 
 #Capfast users may need the following definitions
 #CAPFAST_TEMPLATES=
