@@ -21,8 +21,8 @@ devGenVar_SRCS += devGenVar.c test.c
 
 devGenVar_LIBS += $(EPICS_BASE_IOC_LIBS)
 
-PROD_IOC       += genVarTest
-DBD            += genVarTest.dbd
+#PROD_IOC       += genVarTest
+#DBD            += genVarTest.dbd
 
 genVarTest_DBD += base.dbd
 genVarTest_DBD += devGenVar.dbd
