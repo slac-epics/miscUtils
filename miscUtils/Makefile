@@ -8,7 +8,7 @@ DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Utils))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard drv*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard dev*))
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Lib))
-DIRS += gtr ether_ip restore sSubRecord
+DIRS += gtr restore sSubRecord
 DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
 # Not all Gpib in the repository has been converted to asyn yet.
 # Just these:
@@ -30,7 +30,7 @@ DIRS += optics
 DIRS += event
 else
 # for solaris and vxWorks, build only a subset of site
-DIRS += ether_ip restore sSubRecord
+DIRS += restore sSubRecord
 DIRS += miscUtils
 DIRS += devBusMapped
 DIRS += Hp53181AGpib
