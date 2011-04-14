@@ -24,7 +24,7 @@ DIRS += SRSdg535Gpib
 DIRS += acromagIpac
 DIRS += caenADCV965 CaenADCV965_8 ssi
 # sscan before std and calc, calc before optics and stream
-DIRS += sscan
+DIRS += sscan busy
 DIRS += std calc
 DIRS += optics
 DIRS += event
@@ -43,7 +43,7 @@ DIRS += SRSdg535Gpib
 #DIRS += Hp8664Gpib
 #DIRS += K2701Gpib
 # sscan before std and calc, calc before optics
-DIRS += sscan
+DIRS += sscan busy
 DIRS += std calc
 DIRS += optics
 DIRS += epvxi
