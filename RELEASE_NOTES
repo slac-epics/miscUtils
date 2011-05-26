@@ -22,6 +22,9 @@
 #
 #==============================================================
 #
+miscUtils-R2-2-2:  Modify the RELEASE file to include EPICS BASE version from the 
+                   RELEASE_SITE file
+
 miscUtils-R2-2-1:  Modify RELEASE_SITE to use base-R3-14-8-2-lcls6_p1
 
 miscUtils-R2-2-0:  Build againt base-R3-14-8-2-lcls6 and RTEMS-4.9.4
