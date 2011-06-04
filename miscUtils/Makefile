@@ -4,12 +4,11 @@ TOP = ..
 include $(TOP)/configure/CONFIG
 
 ifneq ($(EPICS_HOST_ARCH),solaris-sparc-gnu)
-DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Utils))
-DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard drv*))
-DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard dev*))
-DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *Lib))
+DIRS += miscUtils
+DIRS += drvRTEMSDmaSup
+DIRS += devBusMapped devGenVar
+DIRS += iocMonLib
 DIRS += gtr restore sSubRecord
-DIRS := $(DIRS) $(filter-out $(DIRS), $(wildcard *App))
 # Not all Gpib in the repository has been converted to asyn yet.
 # Just these:
 DIRS += Hp53181AGpib
@@ -30,9 +29,9 @@ DIRS += optics
 DIRS += event
 else
 # for solaris and vxWorks, build only a subset of site
-DIRS += restore sSubRecord
 DIRS += miscUtils
 DIRS += devBusMapped
+DIRS += restore sSubRecord
 DIRS += Hp53181AGpib
 DIRS += Hp5385Gpib
 DIRS += K2001Gpib
