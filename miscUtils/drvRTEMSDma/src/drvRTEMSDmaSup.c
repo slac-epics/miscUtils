@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include <epicsMutex.h>
+#include <epicsEvent.h>
 #include <epicsInterrupt.h>
 #include <errlog.h>
 #include <devLib.h>
@@ -23,7 +23,7 @@
 
 #define DMACHANNEL       0
 
-static epicsMutexId lock=0;
+static epicsEventId lock=0;
 static DMA_ID inProgress=0;
 
 typedef struct dmaRequest {
@@ -53,13 +53,13 @@ unsigned long s=BSP_VMEDmaStatus(DMACHANNEL);
 		inProgress = 0;
 	}
 	/* yield the driver */
-	epicsMutexUnlock(lock);
+	epicsEventSignal(lock);
 }
 
 static void
 rtemsVmeDmaInit(void)
 {
-	lock=epicsMutexCreate();
+	lock=epicsEventMustCreate( epicsEventFull );
 
 	/* connect and enable DMA interrupt */
 	assert( 0==BSP_VMEDmaInstallISR(DMACHANNEL,rtemsVmeDmaIsr,0) );
@@ -160,12 +160,12 @@ STATUS rval;
 
 	dmaId->status = -1;
 
-	epicsMutexLock( lock );
+	epicsEventWait( lock );
 
 	if ( mode != dmaId->mode ) {
 		rval = BSP_VMEDmaSetup( DMACHANNEL, rtemsVmeDmaBusMode, mode, 0 );
 		if ( rval ) {
-			epicsMutexUnlock( lock );
+			epicsEventSignal( lock );
 			return rval;
 		}
 		dmaId->mode = mode;
@@ -177,7 +177,7 @@ STATUS rval;
 
 	if ( rval ) {
 		inProgress = 0;
-		epicsMutexUnlock( lock );
+		epicsEventSignal( lock );
 	}
 	
 	return rval;
