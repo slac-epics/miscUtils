@@ -5,7 +5,7 @@ include $(TOP)/configure/CONFIG
 
 ifneq ($(EPICS_HOST_ARCH),solaris-sparc-gnu)
 DIRS += miscUtils
-DIRS += drvRTEMSDmaSup
+DIRS += drvRTEMSDma
 DIRS += devBusMapped devGenVar
 DIRS += iocMonLib
 DIRS += gtr restore sSubRecord
@@ -30,7 +30,9 @@ DIRS += event
 else
 # for solaris and vxWorks, build only a subset of site
 DIRS += miscUtils
+DIRS += drvRTEMSDma
 DIRS += devBusMapped
+DIRS += iocMonLib
 DIRS += restore sSubRecord
 DIRS += Hp53181AGpib
 DIRS += Hp5385Gpib
