@@ -27,6 +27,7 @@ DIRS += sscan busy
 DIRS += std calc
 DIRS += optics
 DIRS += event
+DIRS += s7plcTcp
 else
 # for solaris and vxWorks, build only a subset of site
 DIRS += miscUtils
