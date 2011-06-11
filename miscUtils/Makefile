@@ -48,6 +48,7 @@ DIRS += SRSdg535Gpib
 DIRS += sscan busy
 DIRS += std calc
 DIRS += optics
+DIRS += s7plcTcp
 DIRS += epvxi
 endif
 
