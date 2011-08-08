@@ -28,6 +28,7 @@ DIRS += std calc
 DIRS += optics
 DIRS += event
 DIRS += s7plcTcp
+DIRS += modbus
 else
 # for solaris and vxWorks, build only a subset of site
 DIRS += miscUtils
@@ -49,6 +50,7 @@ DIRS += sscan busy
 DIRS += std calc
 DIRS += optics
 DIRS += s7plcTcp
+DIRS += modbus
 DIRS += epvxi
 endif
 
