@@ -4,12 +4,13 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #include "savresUtil.h"
 
 #include "dbAccess.h"
 
-/* $Id: savres.c,v 1.8 2010/08/24 17:33:58 saa Exp $ */
+/* $Id: savres.c,v 1.9 2011/03/03 23:02:10 saa Exp $ */
 
 /* Simple tool to read/write array data from/to a file */
 
