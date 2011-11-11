@@ -52,6 +52,9 @@ DIRS += optics
 DIRS += s7plcTcp
 DIRS += modbus
 DIRS += epvxi
+# stepper before allenBradley
+DIRS += stepper
+DIRS += allenBradley
 endif
 
 include $(TOP)/configure/RULES_TOP
