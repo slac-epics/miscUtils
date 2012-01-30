@@ -9,15 +9,33 @@
 #  Rev:  dd-mmm-yyyy, Reviewer's Name    (USERNAME)
 #--------------------------------------------------------------
 #  Mod:
+#        19-Mar-2010, S. Hoobler         (SONYA):
+#          release miscUtils-R2-2-0
+#        23-Feb-2010, K. Luchini         (LUCHINI):
+#          release miscUtils-R2-1-0
+#        21-Feb-2010  Z. SZalaata        (ZMS):
+#          release miscUtils-R1-0-2-1
 #        08-Oct-2007, K. Luchini         (LUCHINI):
-#          release seq-R1-0-2
-#          release seq-R1-0-1
+#          release miscUtils-R1-0-2
+#          release miscUtils-R1-0-1
 #        26-Sep-2007, E. Williams        (ERNEST):
 #
 #==============================================================
 #
+miscUtils-R2-2-2:  Modify the RELEASE file to include EPICS BASE version from the 
+                   RELEASE_SITE file
+
+miscUtils-R2-2-1:  Modify RELEASE_SITE to use base-R3-14-8-2-lcls6_p1
+
+miscUtils-R2-2-0:  Build againt base-R3-14-8-2-lcls6 and RTEMS-4.9.4
+
+miscUtils-R2-1-0:  Build againt base-R3-14-8-2 and RTEMS-4.9.3
+
+miscUtils-R2-0-0:  Build againt base-R3-14-8-2 and RTEMS-4.9.1
+
 miscUtils-R1-0-2-1:
-	modifications needed to bring the module to EPICS R3-14-9 standard
+                  modifications needed to bring the module to 
+                  EPICS R3-14-9 standard
 
 miscUtils-R1-0-2: Build againt base-R3-14-9-lcls1 (RTEMS 4.7.1)
 
