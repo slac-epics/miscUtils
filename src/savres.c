@@ -7,7 +7,7 @@
 
 #include "savresUtil.h"
 
-/* $Id: savres.c,v 1.6 2006/04/19 08:52:17 till Exp $ */
+/* $Id: savres.c,v 1.1.1.1 2007/06/29 06:43:35 strauman Exp $ */
 
 /* Simple tool to read/write array data from/to a file */
 
