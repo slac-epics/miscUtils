@@ -22,10 +22,11 @@ DIRS += SRSdg535Gpib
 #DIRS += K2701Gpib
 DIRS += acromagIpac
 DIRS += caenADCV965 CaenADCV965_8 ssi
-# sscan before std and calc, calc before optics and stream
+# sscan before std and calc, calc before optics and mca
 DIRS += sscan busy
 DIRS += std calc
 DIRS += optics
+DIRS += mca
 DIRS += event
 DIRS += s7plcTcp
 DIRS += modbus
