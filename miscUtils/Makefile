@@ -8,7 +8,7 @@ DIRS += miscUtils
 DIRS += drvRTEMSDma
 DIRS += devBusMapped devGenVar
 DIRS += iocMonLib
-DIRS += gtr restore sSubRecord
+DIRS += gtr restore
 # Not all Gpib in the repository has been converted to asyn yet.
 # Just these:
 DIRS += Hp53181AGpib
@@ -36,7 +36,7 @@ DIRS += miscUtils
 DIRS += drvRTEMSDma
 DIRS += devBusMapped
 DIRS += iocMonLib
-DIRS += restore sSubRecord
+DIRS += restore
 DIRS += Hp53181AGpib
 DIRS += Hp5385Gpib
 DIRS += K2001Gpib
