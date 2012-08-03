@@ -30,6 +30,9 @@ DIRS += mca
 DIRS += event
 DIRS += s7plcTcp
 DIRS += modbus
+# vmeCardRecord before vsam
+DIRS += vmeCardRecord
+DIRS += vsam
 else
 # for solaris and vxWorks, build only a subset of site
 DIRS += miscUtils
