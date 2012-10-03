@@ -8,7 +8,7 @@ DIRS += miscUtils
 DIRS += drvRTEMSDma
 DIRS += devBusMapped devGenVar
 DIRS += iocMonLib
-DIRS += gtr restore
+DIRS += gtr
 # Not all Gpib in the repository has been converted to asyn yet.
 # Just these:
 DIRS += Hp53181AGpib
@@ -39,7 +39,6 @@ DIRS += miscUtils
 DIRS += drvRTEMSDma
 DIRS += devBusMapped
 DIRS += iocMonLib
-DIRS += restore
 DIRS += Hp53181AGpib
 DIRS += Hp5385Gpib
 DIRS += K2001Gpib
@@ -55,10 +54,6 @@ DIRS += std calc
 DIRS += optics
 DIRS += s7plcTcp
 DIRS += modbus
-DIRS += epvxi
-# stepper before allenBradley
-DIRS += stepper
-DIRS += allenBradley
 endif
 
 include $(TOP)/configure/RULES_TOP
