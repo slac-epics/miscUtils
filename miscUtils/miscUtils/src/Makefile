@@ -9,8 +9,6 @@ INC += basicIoOps.h
 INC += copyright_SLAC.h
 INC += debugPrint.h
 INC += savresUtil.h
-INC += fdbkComm.h 
-INC += fdbkCommTx.h
 
 LIBRARY_IOC = miscUtils
 DBD         = miscUtils.dbd
