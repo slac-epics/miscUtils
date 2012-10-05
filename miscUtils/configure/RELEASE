@@ -8,4 +8,4 @@
 # each time EPICS_BASE, SNCSEQ, or any other external
 # module defined in the RELEASE file is rebuilt.
 
-include $(TOP)/configure/RELEASE-master
+include $(TOP)/../../configure/RELEASE-master
