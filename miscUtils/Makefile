@@ -4,6 +4,11 @@ TOP = .
 include $(TOP)/configure/CONFIG
 
 DIRS += miscUtils
+DIRS += devBusMapped
+DIRS += drvRTEMSDma
+DIRS += devEpicsDma
+ifneq ($(EPICS_HOST_ARCH),solaris-sparc-gnu)
 DIRS += devGenVar
+endif
 
 include $(TOP)/configure/RULES_TOP
