@@ -22,9 +22,7 @@
 /*
  * Don't cause linker errors if BSP fails to supply these routines
  */
-#ifdef HAS_UNIVERSEDMA
-#include <drvUniverseDma.h>
-#elif defined( __rtems__) && defined(HAS_RTEMSDMASUP)
+#if defined( __rtems__)
 #include <drvRTEMSDmaSup.h>
 #else
 #ifndef vxWorks
@@ -39,12 +37,7 @@ typedef int (*sysDmaToVmeFunc)(DMA_ID dmaId, UINT32 vmeAddr, int adrsSpace,
               void *pLocal, int length, int dataWidth);
 typedef int (*sysDmaFromVmeFunc)(DMA_ID dmaId, void *pLocal, UINT32 vmeAddr,
               int adrsSpace, int length, int dataWidth);
-#ifdef HAS_UNIVERSEDMA
-static sysDmaCreateFunc  psysDmaCreate  = universeDmaCreate;
-static sysDmaStatusFunc  psysDmaStatus  = universeDmaStatus;
-static sysDmaFromVmeFunc psysDmaFromVme = universeDmaFromVme;
-static sysDmaToVmeFunc   psysDmaToVme   = universeDmaToVme;
-#elif defined(__rtems__) && defined(HAS_RTEMSDMASUP)
+#if defined(__rtems__)
 static sysDmaCreateFunc  psysDmaCreate  = rtemsVmeDmaCreate;
 static sysDmaStatusFunc  psysDmaStatus  = rtemsVmeDmaStatus;
 static sysDmaFromVmeFunc psysDmaFromVme = rtemsVmeDmaFromVme;
