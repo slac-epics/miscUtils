@@ -1,0 +1,20 @@
+#==============================================================
+#
+#  Name: RELEASE_NOTES
+#
+#  Rem:  This files describes release notes for 
+#        the SPEAR miscUtils epics module.   
+#
+#	miscUtils contains the following general use module support:
+#	* devBusMapped  - Device Support for Accessing Memory-Mapped Registers
+#	* devEpicsDma   - General DMA Interface
+#	* devGenVar     - Device Support for Connecting Basic C/C++ Variables 
+#	                  to EPICS Records
+#	* drvRTEMSDma   - RTEMS DMA Interface (used by devEpicsDma)
+#	* miscUtils     - Miscellaneous Utilities
+#
+#--------------------------------------------------------------
+#
+#
+miscUtils-R0-0-0: 10/8/2012
+	* Initial Version.
