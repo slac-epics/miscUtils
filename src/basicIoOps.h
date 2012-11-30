@@ -171,7 +171,7 @@ static const __EndianTestU endianTester={(int)1};
 #define iobarrier_r()	eieio()
 #define iobarrier_rw()	eieio()
 #define iobarrier_w()	eieio()
-#elif defined(__i386__) || defined(__i386) || defined(__sparc__) || defined(__sparc)
+#elif defined(__i386__) || defined(__i386) || defined(__sparc__) || defined(__sparc) || defined(__x86_64__)
 /* nothing to do on __i386__ */
 #else
 #warning "Unknown IO barrier/synchronization for this CPU (add an #ifdef <YourCpu> around this warning if none needed by your CPU)"
