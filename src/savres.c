@@ -8,7 +8,7 @@
 
 #include "savresUtil.h"
 
-/* $Id: savres.c,v 1.1.1.1 2007/06/29 06:43:35 strauman Exp $ */
+/* $Id: savres.c,v 1.2 2012/11/20 17:14:32 strauman Exp $ */
 
 /* Simple tool to read/write array data from/to a file */
 
@@ -112,11 +112,12 @@ char *s   = mkfnam(path,fnam);
 int  fd   = -1;
 int  got,i;
 char *rbuf;
+mode_t file_permissions = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
 
 	if ( !s )
 		return -1;
 
-	if ( (fd=open(s,O_RDONLY)) < 0 ) {
+	if ( (fd=open(s,O_RDONLY, file_permissions)) < 0 ) {
 		errlogPrintf("savresRstrData; unable to open file for reading: %s\n", strerror(errno));
 		goto cleanup;
 	}
