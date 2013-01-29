@@ -1,7 +1,7 @@
 #ifndef TILLS_INPUT_OUTPUT_OPERA_H
 #define TILLS_INPUT_OUTPUT_OPERA_H
 
-/* $Id: basicIoOps.h,v 1.3 2005/03/11 23:31:49 till Exp $ */
+/* $Id: basicIoOps.h,v 1.4 2006/12/02 05:33:15 till Exp $ */
 
 #ifdef __rtems__
 #include <rtems.h>
@@ -168,9 +168,9 @@ static const __EndianTestU endianTester={(int)1};
 
 #ifdef ASSEMBLEPPC
 #define __eieio()	do { __asm__ __volatile__ ("eieio"); } while(0)
-#define iobarrier_r()	eieio()
-#define iobarrier_rw()	eieio()
-#define iobarrier_w()	eieio()
+#define iobarrier_r()	__eieio()
+#define iobarrier_rw()	__eieio()
+#define iobarrier_w()	__eieio()
 #elif defined(__i386__) || defined(__i386) || defined(__sparc__) || defined(__sparc)
 /* nothing to do on __i386__ */
 #else

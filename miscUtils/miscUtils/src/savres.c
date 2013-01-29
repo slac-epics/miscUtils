@@ -10,7 +10,7 @@
 
 #include "dbAccess.h"
 
-/* $Id: savres.c,v 1.9 2011/03/03 23:02:10 saa Exp $ */
+/* $Id: savres.c,v 1.10 2011/08/17 00:39:49 saa Exp $ */
 
 /* Simple tool to read/write array data from/to a file */
 
@@ -28,8 +28,8 @@
 #include <dbLock.h>
 #include <recSup.h>
 #include <recGbl.h>
-#include <assert.h>
 #include <errlog.h>
+#include <assert.h>
 #ifdef HAS_MSGQ
 #include <epicsMessageQueue.h>
 #else
@@ -114,11 +114,12 @@ char *s   = mkfnam(path,fnam);
 int  fd   = -1;
 int  got,i;
 char *rbuf;
+mode_t file_permissions = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
 
 	if ( !s )
 		return -1;
 
-	if ( (fd=open(s,O_RDONLY)) < 0 ) {
+	if ( (fd=open(s,O_RDONLY, file_permissions)) < 0 ) {
 		errlogPrintf("savresRstrData; unable to open file for reading: %s\n", strerror(errno));
 		goto cleanup;
 	}
