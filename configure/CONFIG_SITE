@@ -14,7 +14,7 @@
 #CROSS_COMPILER_TARGET_ARCHS = vxWorks-68040
 
 # Build for RTEMS only. Not relevant to vxWorks
-CROSS_COMPILER_TARGET_ARCHS = RTEMS-beatnik RTEMS-mvme3100 RTEMS-uC5282 linuxRT-x86 vxWorks-ppc604_long
+#CROSS_COMPILER_TARGET_ARCHS = RTEMS-beatnik RTEMS-mvme3100 RTEMS-uC5282 linuxRT-x86 vxWorks-ppc604_long
 
 
 # Set this when your IOC and the host use different paths
