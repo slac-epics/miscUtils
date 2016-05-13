@@ -22,6 +22,10 @@
 #
 #==============================================================
 #
+miscUtils-R2-2-3:  12-May-2016
+                   T.Straumann  - included <sys/stat.h> and <errlog.h>
+                   K.Kim - add 3rd arg (file permission) for open() to support vxWorks
+
 miscUtils-R2-2-2:  Modify the RELEASE file to include EPICS BASE version from the 
                    RELEASE_SITE file
 
