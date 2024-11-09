@@ -16,6 +16,9 @@ DBD         = miscUtils.dbd
 LIBSRCS += miscUtils.c
 LIBSRCS += savres.c
 
+miscUtils_SRCS_Linux += linuxIocsh.c
+miscUtils_SRCS_RTEMS += rtemsIocsh.c
+
 miscUtils_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 include $(TOP)/configure/RULES
