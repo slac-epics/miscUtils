@@ -22,6 +22,10 @@
 #
 #==============================================================
 #
+R2.2.6             09-Oct-2025
+                   J.Lorelli - Updated to support RTEMS 6
+                   Added getrlimit/setrlimit iocsh commands for Linux/LinuxRT
+
 R2.2.5:            18-Apr-2017
                    B.Hill - Updated RELEASE.local to latest git workflow
                    No source changes.
